@@ -1,12 +1,16 @@
 <template>
   <div class="workinghoursview">
     <div class="container">
-      <PageHeader
-        title="Calculate working hours"
-        subtitle="Use the interactive calendar to help calculate working hours for various durations."
-      />
-      <div class="calendar-container">
-        <Calendar class="mx-auto" />
+      <div class="row">
+        <PageHeader
+          title="Calculate working hours"
+          subtitle="Use the interactive calendar to help calculate working hours for various durations."
+        />
+      </div>
+      <div class="row">
+        <div class="calendar-container">
+          <Calendar />
+        </div>
       </div>
     </div>
   </div>

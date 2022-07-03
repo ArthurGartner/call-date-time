@@ -20,7 +20,6 @@ export default {
 <style scoped lang="scss">
 .title-group {
   padding-top: 20px;
-  margin-bottom: 20px;
   color: var(--text-primary-color);
 
   .subtitle {

@@ -1,7 +1,7 @@
 <template>
   <div class="calendar">
     <div class="cal-nav text-center">
-      <h1>{{ selectedYear }}</h1>
+      <h1 class="d-inline-block">{{ selectedYear }}</h1>
     </div>
     <div class="main-cal-view">
       <div class="cal-header text-center">
@@ -138,10 +138,11 @@ export default {
 </script>
 <style scoped lang="scss">
 .calendar {
+  width: 100%;
   .main-cal-view {
     position: relative;
-    max-height: 500px;
-    max-width: 500px;
+    height: 300px;
+    width: 100%;
     background: var(--background-color-secondary);
     border-radius: 20px;
     overflow: hidden;
@@ -151,7 +152,6 @@ export default {
     .cal-header {
       background: #d33e2a;
       height: auto;
-      width: 100%;
       padding-top: 5px;
       padding-bottom: 5px;
     }
@@ -185,8 +185,8 @@ export default {
 
           p {
             margin: 0;
-            top: 50%;
-            padding: 10px;
+            //top: 50%;
+            //padding: 10px;
             z-index: 2;
           }
         }
@@ -202,8 +202,8 @@ export default {
 
           p {
             margin: 0;
-            top: 50%;
-            padding: 10px;
+            //top: 50%;
+            //padding: 10px;
             z-index: 2;
           }
         }
@@ -231,88 +231,12 @@ export default {
 
           p {
             margin: 0;
-            top: 50%;
-            padding: 10px;
+            //top: 50%;
+            //padding: 10px;
             z-index: 2;
           }
         }
       }
-    }
-  }
-}
-
-@media only screen and (max-width: 576px) {
-  .calendar {
-    background: green;
-
-    .cal-nav {
-      h1 {
-        font-size: 1.2rem;
-      }
-    }
-
-    .main-cal-view {
-      height: auto;
-      width: auto;
-      .cal-header {
-        .header-container {
-          h1 {
-            font-size: 1.2rem;
-          }
-        }
-      }
-    }
-  }
-}
-@media only screen and (min-width: 576px) {
-  .calendar {
-    .cal-nav {
-      font-size: 0.2rem;
-    }
-
-    .main-cal-view {
-      height: 400px;
-      width: 400px;
-
-      .cal-header {
-        .header-container {
-          .month {
-            font-size: 0.5rem;
-          }
-        }
-      }
-    }
-  }
-}
-@media only screen and (min-width: 767px) {
-  .calendar {
-    .main-cal-view {
-      height: 450px;
-      width: 450px;
-    }
-  }
-}
-@media only screen and (min-width: 991px) {
-  .calendar {
-    .main-cal-view {
-      height: 400px;
-      width: 400px;
-    }
-  }
-}
-@media only screen and (min-width: 1199px) {
-  .calendar {
-    .main-cal-view {
-      height: 450px;
-      width: 450px;
-    }
-  }
-}
-@media only screen and (min-width: 1399px) {
-  .calendar {
-    .main-cal-view {
-      height: 500px;
-      width: 500px;
     }
   }
 }
