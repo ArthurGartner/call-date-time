@@ -14,7 +14,7 @@
             class="prev-month-btn my-auto mx-3"
           />
           <div class="month">
-            <h1>{{ getMonthName(selectedMonth) }}</h1>
+            <h1 class="my-auto">{{ getMonthName(selectedMonth) }}</h1>
           </div>
           <CalBtn @btn-click="nextMonth" class="next-month-btn my-auto mx-3" />
         </div>
@@ -42,10 +42,23 @@
             </p>
           </div>
           <div
+            @click="dayClicked(date - 1)"
             class="individual-day"
-            v-for="date in getDaysInMonth(selectedYear, selectedMonth)"
+            v-for="date in getDaysInMonthandLoadArray(
+              selectedYear,
+              selectedMonth
+            )"
             :key="date"
           >
+            <div
+              class="curday"
+              v-if="
+                selectedYear == currentYear &&
+                selectedMonth == currentMonth &&
+                date == currentDay
+              "
+            ></div>
+
             <div class="day-selection" />
             <p>{{ date }}</p>
           </div>
@@ -71,12 +84,37 @@ export default {
   },
   data() {
     return {
+      currentDay: new Date().getDate(),
+      currentMonth: new Date().getMonth(),
+      currentYear: new Date().getFullYear(),
       selectedMonth: new Date().getMonth(),
       selectedYear: new Date().getFullYear(),
       days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      curMonthDates: [],
     };
   },
   methods: {
+    //Handle date click
+    dayClicked(arrIndex) {
+      console.log(this.curMonthDates[arrIndex]);
+    },
+    //Load days for current selected month into array and return total number of days in month
+    getDaysInMonthandLoadArray(year, month) {
+      let daysInMonth = this.getDaysInMonth(year, month);
+      let startDate = new Date(year, month, 1);
+      let endDate = new Date(year, month, daysInMonth);
+
+      //Clean array
+      this.curMonthDates = [];
+
+      //Iterate through, saving each day to array
+      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+        let day = new Date(d);
+        this.curMonthDates.push(day);
+      }
+
+      return daysInMonth;
+    },
     getDaysInMonth(year, month) {
       //months use 0 index. January == 0
       const date = new Date(year, month + 1, 0);
@@ -227,6 +265,18 @@ export default {
               background: #d33e2a;
               border-radius: 1rem;
             }
+          }
+
+          .curday {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 2rem;
+            height: 2rem;
+            border: 1px solid #d33e2a;
+            border-radius: 1rem;
           }
 
           p {

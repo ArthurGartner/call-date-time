@@ -1,6 +1,8 @@
 <template>
-  <NavBar />
-  <div class="page-view"><router-view /></div>
+  <div>
+    <NavBar />
+    <div class="page-view"><router-view /></div>
+  </div>
 </template>
 
 <script>
@@ -13,6 +15,16 @@ export default {
   mounted() {
     const initUserTheme = this.getTheme() || this.getMediaPreference();
     this.setTheme(initUserTheme);
+
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (event) => {
+        if (event.matches) {
+          this.setTheme("dark-theme");
+        } else {
+          this.setTheme("light-theme");
+        }
+      });
   },
   methods: {
     toggleTheme() {
