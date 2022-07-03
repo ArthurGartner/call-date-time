@@ -66,6 +66,7 @@ html {
   --background-color-secondary: #ebebeb;
   --accent-color: #cacaca;
   --text-primary-color: #222;
+  --text-muted: gray;
 }
 
 /* Define styles for the root window with dark - mode preference */
@@ -74,6 +75,7 @@ html {
   --background-color-secondary: #2d2d30;
   --accent-color: #3f3f3f;
   --text-primary-color: #ddd;
+  --text-muted: gray;
 }
 
 .page-view {

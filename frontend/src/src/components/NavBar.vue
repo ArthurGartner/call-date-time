@@ -72,6 +72,7 @@ export default {
 .nav-container {
   position: fixed;
   background-color: var(--background-color-secondary);
+  z-index: 10;
 }
 .navbar-brand {
   text-decoration: none;
