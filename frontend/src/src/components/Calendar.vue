@@ -8,11 +8,15 @@
         <div
           class="header-container text-center d-flex justify-content-between align-content-center"
         >
-          <CalBtn @btn-click="prevMonth" type="prev" class="my-auto mx-3" />
+          <CalBtn
+            @btn-click="prevMonth"
+            type="prev"
+            class="prev-month-btn my-auto mx-3"
+          />
           <div class="month">
             <h1>{{ getMonthName(selectedMonth) }}</h1>
           </div>
-          <CalBtn @btn-click="nextMonth" class="my-auto mx-3" />
+          <CalBtn @btn-click="nextMonth" class="next-month-btn my-auto mx-3" />
         </div>
       </div>
       <div class="days-view">
@@ -26,11 +30,15 @@
           <div
             @click="prevMonth"
             class="prev-month-days"
-            v-for="day in startDay(selectedMonth)"
+            v-for="day in startDay(selectedMonth, selectedYear)"
             :key="day"
           >
             <p>
-              {{ getPrevMonthTrailing() - startDay(selectedMonth) + day }}
+              {{
+                getPrevMonthTrailing(selectedMonth, selectedYear) -
+                startDay(selectedMonth, selectedYear) +
+                day
+              }}
             </p>
           </div>
           <div
@@ -44,7 +52,7 @@
           <div
             @click="nextMonth"
             class="next-month-days"
-            v-for="date in getNextMonthLeading()"
+            v-for="date in getNextMonthLeading(selectedMonth, selectedYear)"
             :key="date"
           >
             <p>{{ date }}</p>
@@ -82,10 +90,11 @@ export default {
       return month;
     },
     //Takes num of month, starting at 0
-    startDay(num) {
-      const date = new Date(this.selectedYear, num, 1);
+    startDay(numOfMonth, numOfYear) {
+      const date = new Date(numOfYear, numOfMonth, 1);
       return date.getDay();
     },
+    //Increments instance of month. Does not need parameters.
     nextMonth() {
       //Ensure that month value resets when month == 11 (December)
       if (this.selectedMonth > 10) {
@@ -95,6 +104,7 @@ export default {
         this.selectedMonth++;
       }
     },
+    //Decrements instance of month. Does not need parameters.
     prevMonth() {
       if (this.selectedMonth < 1) {
         this.selectedYear--;
@@ -103,11 +113,11 @@ export default {
         this.selectedMonth--;
       }
     },
-    getPrevMonthTrailing() {
-      let prevMonthVal = this.selectedMonth;
-      let yearVal = this.selectedYear;
+    getPrevMonthTrailing(numOfMonth, numOfYear) {
+      let prevMonthVal = numOfMonth;
+      let yearVal = numOfYear;
 
-      if (this.selectedMonth < 1) {
+      if (prevMonthVal < 1) {
         yearVal--;
         prevMonthVal = 11;
       } else {
@@ -117,12 +127,9 @@ export default {
       let prevMonthDays = this.getDaysInMonth(yearVal, prevMonthVal);
       return prevMonthDays;
     },
-    getNextMonthLeading() {
-      let currentMonthStartDay = this.startDay(this.selectedMonth);
-      let currentDaysInMonth = this.getDaysInMonth(
-        this.selectedYear,
-        this.selectedMonth
-      );
+    getNextMonthLeading(numOfMonth, numOfYear) {
+      let currentMonthStartDay = this.startDay(numOfMonth, numOfYear);
+      let currentDaysInMonth = this.getDaysInMonth(numOfYear, numOfMonth);
       let result = 7 - ((currentMonthStartDay + (currentDaysInMonth % 7)) % 7);
       return result;
     },
@@ -131,13 +138,10 @@ export default {
 </script>
 <style scoped lang="scss">
 .calendar {
-  height: 500px;
-  width: 500px;
-
   .main-cal-view {
     position: relative;
-    height: 500px;
-    width: 500px;
+    max-height: 500px;
+    max-width: 500px;
     background: var(--background-color-secondary);
     border-radius: 20px;
     overflow: hidden;
@@ -233,6 +237,82 @@ export default {
           }
         }
       }
+    }
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .calendar {
+    background: green;
+
+    .cal-nav {
+      h1 {
+        font-size: 1.2rem;
+      }
+    }
+
+    .main-cal-view {
+      height: auto;
+      width: auto;
+      .cal-header {
+        .header-container {
+          h1 {
+            font-size: 1.2rem;
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (min-width: 576px) {
+  .calendar {
+    .cal-nav {
+      font-size: 0.2rem;
+    }
+
+    .main-cal-view {
+      height: 400px;
+      width: 400px;
+
+      .cal-header {
+        .header-container {
+          .month {
+            font-size: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (min-width: 767px) {
+  .calendar {
+    .main-cal-view {
+      height: 450px;
+      width: 450px;
+    }
+  }
+}
+@media only screen and (min-width: 991px) {
+  .calendar {
+    .main-cal-view {
+      height: 400px;
+      width: 400px;
+    }
+  }
+}
+@media only screen and (min-width: 1199px) {
+  .calendar {
+    .main-cal-view {
+      height: 450px;
+      width: 450px;
+    }
+  }
+}
+@media only screen and (min-width: 1399px) {
+  .calendar {
+    .main-cal-view {
+      height: 500px;
+      width: 500px;
     }
   }
 }
