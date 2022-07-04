@@ -42,25 +42,22 @@
             </p>
           </div>
           <div
-            @click="dayClicked(date - 1)"
+            @click="dayClicked(dateObject)"
             class="individual-day"
-            v-for="date in getDaysInMonthandLoadArray(
-              selectedYear,
-              selectedMonth
-            )"
-            :key="date"
+            v-for="dateObject in curMonthDateObjects"
+            :key="dateObject.date.getDate()"
           >
             <div
               class="curday"
               v-if="
-                selectedYear == currentYear &&
+                dateObject.date.getDate() == currentDay &&
                 selectedMonth == currentMonth &&
-                date == currentDay
+                selectedYear == currentYear
               "
             ></div>
-
+            <div v-if="dateObject.isSelected" class="selected-day"></div>
             <div class="day-selection" />
-            <p>{{ date }}</p>
+            <p>{{ dateObject.date.getDate() }}</p>
           </div>
           <div
             @click="nextMonth"
@@ -90,30 +87,87 @@ export default {
       selectedMonth: new Date().getMonth(),
       selectedYear: new Date().getFullYear(),
       days: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-      curMonthDates: [],
+      curMonthDateObjects: [],
+      selectedDateObject1: null,
+      selectedDateObject2: null,
+      pullBucket1: true,
     };
+  },
+  mounted() {
+    this.updateDateArrayCurrentSelection();
   },
   methods: {
     //Handle date click
-    dayClicked(arrIndex) {
-      console.log(this.curMonthDates[arrIndex]);
+    dayClicked(dateObject) {
+      //Toggle isSelected attribute for dateObject
+      dateObject.isSelected = !dateObject.isSelected;
+
+      //Add or remove from tracking
+      if (dateObject.isSelected) {
+        if (this.pullBucket1) {
+          if (this.selectedDateObject1) {
+            this.selectedDateObject1.isSelected = false;
+          }
+          this.selectedDateObject1 = dateObject;
+        } else {
+          if (this.selectedDateObject2) {
+            this.selectedDateObject2.isSelected = false;
+          }
+
+          this.selectedDateObject2 = dateObject;
+        }
+        this.pullBucket1 = !this.pullBucket1;
+      } else {
+        if (
+          this.selectedDateObject1?.date.getTime() ===
+          dateObject?.date.getTime()
+        ) {
+          this.selectedDateObject1 = null;
+          this.pullBucket1 = true;
+        } else {
+          this.selectedDateObject2 = null;
+          this.pullBucket1 = false;
+        }
+      }
+
+      //Need to analyze this
+      this.$emit("date-clicked", dateObject);
+      this.updateDateArrayCurrentSelection();
     },
-    //Load days for current selected month into array and return total number of days in month
-    getDaysInMonthandLoadArray(year, month) {
+    updateDateArrayCurrentSelection() {
+      this.updateDateArray(this.currentMonth, this.currentYear);
+    },
+    //Load days for current selected month into array and returns array of date objects
+    updateDateArray(month, year) {
       let daysInMonth = this.getDaysInMonth(year, month);
       let startDate = new Date(year, month, 1);
       let endDate = new Date(year, month, daysInMonth);
 
       //Clean array
-      this.curMonthDates = [];
 
-      //Iterate through, saving each day to array
+      let localArray = [];
+
+      //Iterate through, saving each day to array. Build custom date object
       for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        let day = new Date(d);
-        this.curMonthDates.push(day);
+        let customDateObject = {
+          date: new Date(d),
+          info: "",
+          isSelected: false,
+        };
+
+        if (
+          customDateObject.date.getTime() ===
+            this.selectedDateObject1?.date.getTime() ||
+          customDateObject.date.getTime() ===
+            this.selectedDateObject2?.date.getTime()
+        ) {
+          customDateObject.isSelected = true;
+        }
+
+        localArray.push(customDateObject);
       }
 
-      return daysInMonth;
+      this.curMonthDateObjects = localArray;
     },
     getDaysInMonth(year, month) {
       //months use 0 index. January == 0
@@ -141,6 +195,8 @@ export default {
       } else {
         this.selectedMonth++;
       }
+
+      this.updateDateArray(this.selectedMonth, this.selectedYear);
     },
     //Decrements instance of month. Does not need parameters.
     prevMonth() {
@@ -150,6 +206,7 @@ export default {
       } else {
         this.selectedMonth--;
       }
+      this.updateDateArray(this.selectedMonth, this.selectedYear);
     },
     getPrevMonthTrailing(numOfMonth, numOfYear) {
       let prevMonthVal = numOfMonth;
@@ -188,7 +245,7 @@ export default {
     flex-direction: column;
 
     .cal-header {
-      background: #d33e2a;
+      background: var(--cal-highlight);
       height: auto;
       padding-top: 5px;
       padding-bottom: 5px;
@@ -203,7 +260,7 @@ export default {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         text-align: center;
-        background: #d33e2a;
+        background: var(--cal-highlight);
       }
 
       .individual-days {
@@ -253,19 +310,6 @@ export default {
           flex-direction: column;
           justify-content: center;
           position: relative;
-          &:hover {
-            .day-selection {
-              position: absolute;
-              left: 0;
-              right: 0;
-              margin-left: auto;
-              margin-right: auto;
-              width: 2rem;
-              height: 2rem;
-              background: #d33e2a;
-              border-radius: 1rem;
-            }
-          }
 
           .curday {
             position: absolute;
@@ -275,7 +319,19 @@ export default {
             margin-right: auto;
             width: 2rem;
             height: 2rem;
-            border: 1px solid #d33e2a;
+            border: 1px solid var(--cal-highlight);
+            border-radius: 1rem;
+          }
+
+          .selected-day {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 2rem;
+            height: 2rem;
+            background: var(--cal-highlight);
             border-radius: 1rem;
           }
 
@@ -284,6 +340,32 @@ export default {
             //top: 50%;
             //padding: 10px;
             z-index: 2;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (hover: hover) {
+  .calendar {
+    .main-cal-view {
+      .days-view {
+        .individual-days {
+          .individual-day {
+            &:hover {
+              .day-selection {
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin-left: auto;
+                margin-right: auto;
+                width: 2rem;
+                height: 2rem;
+                background: var(--cal-highlight);
+                border-radius: 1rem;
+              }
+            }
           }
         }
       }

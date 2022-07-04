@@ -35,8 +35,10 @@ export default {
   i {
     margin: auto;
   }
+}
 
-  &:hover {
+@media (hover: hover) {
+  .btn-container:hover {
     background: var(--background-color-secondary);
     color: #d33e2a;
   }

@@ -54,7 +54,6 @@ export default {
     navLinks.forEach((l) => {
       l.addEventListener("click", () => {
         if (navMenu.classList.contains("show")) {
-          console.log("Yes");
           menuToggle.click();
         }
       });
@@ -92,7 +91,7 @@ export default {
 }
 .logo_code {
   font-family: "Courier New";
-  color: #eeb328;
+  color: #f7bf3c;
 }
 
 .navbar-toggler:active,

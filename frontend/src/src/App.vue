@@ -79,6 +79,7 @@ html {
   --accent-color: #cacaca;
   --text-primary-color: #222;
   --text-muted: gray;
+  --cal-highlight: #eb534c;
 }
 
 /* Define styles for the root window with dark - mode preference */
@@ -88,6 +89,7 @@ html {
   --accent-color: #3f3f3f;
   --text-primary-color: #ddd;
   --text-muted: gray;
+  --cal-highlight: #d33e2a;
 }
 
 .page-view {
