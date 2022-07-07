@@ -70,7 +70,7 @@ export default {
 <style scoped lang="scss">
 .nav-container {
   position: fixed;
-  background-color: var(--background-color-secondary);
+  background-color: var(--background-color-primary);
   z-index: 10;
 }
 .navbar-brand {

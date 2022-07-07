@@ -3,15 +3,19 @@
     <div class="container">
       <div class="row">
         <PageHeader
-          title="Calculate working hours"
-          subtitle="Use the interactive calendar to help calculate working hours for various durations."
+          title="Working Hours"
+          subtitle="Calculate working hours within custom ranges."
         />
       </div>
       <div class="row">
         <div class="calendar-container">
-          <Calendar @date-clicked="dateClicked" />
+          <Calendar @date-add="dateAdd" @date-remove="dateRemove" />
         </div>
-        <DateSelection class="mt-3" :curDateObject="curDateObject" />
+        <DateSelection
+          class="mt-3"
+          :dateObject1="dateObject1"
+          :dateObject2="dateObject2"
+        />
       </div>
       <WorkingHours class="mt-3" />
     </div>
@@ -32,12 +36,25 @@ export default {
   },
   data() {
     return {
-      curDateObject: { date: new Date() },
+      dateObject1: null,
+      dateObject2: null,
     };
   },
   methods: {
-    dateClicked(dateObject) {
-      this.curDateObject = dateObject;
+    //Find open slot to put passed date
+    dateAdd(dateObject) {
+      if (this.dateObject1) {
+        this.dateObject2 = dateObject;
+      } else {
+        this.dateObject1 = dateObject;
+      }
+    },
+    dateRemove(dateObject) {
+      if (this.dateObject1?.date.getTime() === dateObject?.date.getTime()) {
+        this.dateObject1 = null;
+      } else {
+        this.dateObject2 = null;
+      }
     },
   },
 };

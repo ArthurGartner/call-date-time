@@ -1,40 +1,67 @@
 <template>
   <div class="date-selection-view">
     <div class="component-container d-flex">
-      <div class="header">
-        <div
-          v-if="
-            currentDay == curDateObject.date.getDate() &&
-            currentMonth == curDateObject.date.getMonth() &&
-            currentYear == curDateObject.date.getFullYear()
-          "
-        >
-          <p>
-            Today - {{ getMonthName(curDateObject.date.getMonth()) }}
-            {{ curDateObject.date.getFullYear() }}
-          </p>
+      <div class="header d-flex justify-content-between">
+        <!-- Section for left header, shows date and year for selection -->
+        <div class="left-header">
+          <!-- Check if this dateobject exists -->
+          <div v-if="dateObject1">
+            <div
+              v-if="
+                currentDay == this.dateObject1?.date.getDate() &&
+                currentMonth == dateObject1?.date.getMonth() &&
+                currentYear == dateObject1?.date.getFullYear()
+              "
+            >
+              <p>
+                Today - {{ getMonthName(dateObject1?.date.getMonth()) }}
+                {{ dateObject1?.date.getFullYear() }}
+              </p>
+            </div>
+            <div v-else>
+              <p>
+                {{ getMonthName(dateObject1?.date.getMonth()) }}
+                {{ dateObject1?.date.getFullYear() }}
+              </p>
+            </div>
+          </div>
         </div>
-        <div v-else>
-          <p>
-            {{ getMonthName(curDateObject.date.getMonth()) }}
-            {{ curDateObject.date.getFullYear() }}
-          </p>
+        <div class="right-header">
+          <!-- Check if dateobject exists for second variable -->
+          <div v-if="dateObject2">
+            <p>
+              {{ getMonthName(dateObject2?.date.getMonth()) }}
+              {{ dateObject2?.date.getFullYear() }}
+            </p>
+          </div>
         </div>
       </div>
+      <!-- Section for bottom, info portion of date selection component -->
       <div class="content d-flex justify-content-between">
-        <div class="date-image d-flex flex-column text-center align-middle">
+        <div
+          v-if="dateObject1"
+          class="date-image d-flex flex-column text-center align-middle"
+        >
           <div class="date-val d-flex flex-column">
             <div class="inline-block my-auto">
-              {{ curDateObject.date.getDate() }}
+              {{ dateObject1?.date.getDate() }}
             </div>
           </div>
           <div class="left-date"></div>
         </div>
-        <div class="middle-content"></div>
-        <div class="date-image d-flex flex-column text-center align-middle">
+        <div class="middle-content mx-auto my-auto">
+          <div v-if="!dateObject1" class=".noselection">
+            <h3>No dates selected</h3>
+            <p class="text-center">Select a date above</p>
+          </div>
+        </div>
+        <div
+          v-if="dateObject2"
+          class="date-image d-flex flex-column text-center align-middle"
+        >
           <div class="date-val d-flex flex-column">
             <div class="inline-block my-auto">
-              {{ curDateObject.date.getDate() }}
+              {{ dateObject2?.date.getDate() }}
             </div>
           </div>
           <div class="left-date"></div>
@@ -47,7 +74,8 @@
 export default {
   name: "date-selection",
   props: {
-    curDateObject: Object,
+    dateObject1: Object,
+    dateObject2: Object,
   },
   data() {
     return {
@@ -75,7 +103,7 @@ export default {
     position: relative;
     height: 120px;
     width: 100%;
-    background: var(--background-color-secondary);
+    background: var(--item-background);
     border-radius: 20px;
     overflow: hidden;
     display: flex;
@@ -97,10 +125,6 @@ export default {
         font-size: 2.7rem;
         position: relative;
 
-        .middle-content {
-          flex-grow: 1;
-        }
-
         .date-val {
           z-index: 3;
           height: 100%;
@@ -119,6 +143,18 @@ export default {
           border: 3px solid var(--cal-highlight);
           border-radius: 2rem;
           z-index: 1;
+        }
+      }
+
+      .middle-content {
+        margin: 0px;
+
+        h3 {
+          margin-bottom: 0px;
+        }
+
+        p {
+          color: var(--text-muted);
         }
       }
     }

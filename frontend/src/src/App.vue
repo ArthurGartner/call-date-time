@@ -74,22 +74,24 @@ html {
 }
 
 :root {
-  --background-color-primary: #fafafa;
+  --background-color-primary: #efeef4;
   --background-color-secondary: #ebebeb;
+  --item-background: #ffffff;
   --accent-color: #cacaca;
   --text-primary-color: #222;
   --text-muted: gray;
-  --cal-highlight: #eb534c;
+  --cal-highlight: #e14435;
 }
 
 /* Define styles for the root window with dark - mode preference */
 :root.dark-theme {
-  --background-color-primary: #1e1e1e;
+  --background-color-primary: #000000;
   --background-color-secondary: #2d2d30;
+  --item-background: #1d1d1e;
   --accent-color: #3f3f3f;
   --text-primary-color: #ddd;
   --text-muted: gray;
-  --cal-highlight: #d33e2a;
+  --cal-highlight: #e8493d;
 }
 
 .page-view {

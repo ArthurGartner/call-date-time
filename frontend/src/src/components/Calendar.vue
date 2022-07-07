@@ -104,18 +104,23 @@ export default {
 
       //Add or remove from tracking
       if (dateObject.isSelected) {
+        //Check which holding variable is up next for new date object assignment
         if (this.pullBucket1) {
+          //Check to see if variable is already assigned. If so remove.
           if (this.selectedDateObject1) {
             this.selectedDateObject1.isSelected = false;
+            this.$emit("date-remove", this.selectedDateObject1);
           }
           this.selectedDateObject1 = dateObject;
         } else {
           if (this.selectedDateObject2) {
             this.selectedDateObject2.isSelected = false;
+            this.$emit("date-remove", this.selectedDateObject2);
           }
 
           this.selectedDateObject2 = dateObject;
         }
+        this.$emit("date-add", dateObject);
         this.pullBucket1 = !this.pullBucket1;
       } else {
         if (
@@ -128,10 +133,11 @@ export default {
           this.selectedDateObject2 = null;
           this.pullBucket1 = false;
         }
+
+        this.$emit("date-remove", dateObject);
       }
 
       //Need to analyze this
-      this.$emit("date-clicked", dateObject);
       this.updateDateArrayCurrentSelection();
     },
     updateDateArrayCurrentSelection() {
@@ -238,7 +244,7 @@ export default {
     position: relative;
     height: 300px;
     width: 100%;
-    background: var(--background-color-secondary);
+    background: var(--item-background);
     border-radius: 20px;
     overflow: hidden;
     display: flex;
