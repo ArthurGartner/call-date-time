@@ -43,21 +43,36 @@
           </div>
           <div
             @click="dayClicked(dateObject)"
-            class="individual-day"
+            :class="[
+              'individual-day',
+              dateObject.isCurDay ? 'current-day' : 'not-current-day',
+            ]"
             v-for="dateObject in curMonthDateObjects"
             :key="dateObject.date.getDate()"
           >
+            <!-- display for when current day is selected -->
             <div
               class="curday"
-              v-if="
-                dateObject.date.getDate() == currentDay &&
-                selectedMonth == currentMonth &&
-                selectedYear == currentYear
-              "
+              v-if="dateObject.isSelected && dateObject.isCurDay"
             ></div>
-            <div v-if="dateObject.isSelected" class="selected-day"></div>
+            <!-- Display for days other than current day when selected -->
+            <div
+              v-if="dateObject.isSelected && !dateObject.isCurDay"
+              class="selected-day"
+            ></div>
             <div class="day-selection" />
-            <p>{{ dateObject.date.getDate() }}</p>
+            <p
+              :class="[
+                dateObject.isSelected && !dateObject.isCurDay
+                  ? 'inverse-color'
+                  : '',
+                dateObject.isCurDay && dateObject.isSelected
+                  ? 'selected-date-text-color'
+                  : '',
+              ]"
+            >
+              {{ dateObject.date.getDate() }}
+            </p>
           </div>
           <div
             @click="nextMonth"
@@ -159,8 +174,10 @@ export default {
           date: new Date(d),
           info: "",
           isSelected: false,
+          isCurDay: false,
         };
 
+        //Determine if this date is one of selected dates
         if (
           customDateObject.date.getTime() ===
             this.selectedDateObject1?.date.getTime() ||
@@ -168,6 +185,15 @@ export default {
             this.selectedDateObject2?.date.getTime()
         ) {
           customDateObject.isSelected = true;
+        }
+
+        //Evaluate whether this date is the current date according to client time
+        if (
+          this.currentDay == customDateObject.date.getDate() &&
+          this.currentMonth == customDateObject.date.getMonth() &&
+          this.currentYear == customDateObject.date.getFullYear()
+        ) {
+          customDateObject.isCurDay = true;
         }
 
         localArray.push(customDateObject);
@@ -238,6 +264,18 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.test {
+  background: rgba(128, 128, 128, 0.25);
+}
+
+.current-day {
+  color: var(--cal-highlight);
+}
+
+.selected-date-text-color {
+  color: var(--text-primary-color);
+}
+
 .calendar {
   width: 100%;
   .main-cal-view {
@@ -325,7 +363,7 @@ export default {
             margin-right: auto;
             width: 2rem;
             height: 2rem;
-            border: 1px solid var(--cal-highlight);
+            background: var(--cal-highlight);
             border-radius: 1rem;
           }
 
@@ -337,7 +375,7 @@ export default {
             margin-right: auto;
             width: 2rem;
             height: 2rem;
-            background: var(--cal-highlight);
+            background: var(--text-primary-color);
             border-radius: 1rem;
           }
 
@@ -353,27 +391,43 @@ export default {
   }
 }
 
+.inverse-color {
+  color: var(--text-primary-color-inverse);
+}
+
 @media (hover: hover) {
-  .calendar {
-    .main-cal-view {
-      .days-view {
-        .individual-days {
-          .individual-day {
-            &:hover {
-              .day-selection {
-                position: absolute;
-                left: 0;
-                right: 0;
-                margin-left: auto;
-                margin-right: auto;
-                width: 2rem;
-                height: 2rem;
-                background: var(--cal-highlight);
-                border-radius: 1rem;
-              }
-            }
-          }
-        }
+  .current-day {
+    &:hover {
+      color: var(--text-primary-color);
+
+      .day-selection {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 2rem;
+        height: 2rem;
+        background: var(--cal-highlight);
+        border-radius: 1rem;
+      }
+    }
+  }
+
+  .not-current-day {
+    &:hover {
+      color: var(--text-primary-color-inverse);
+
+      .day-selection {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        width: 2rem;
+        height: 2rem;
+        background: var(--text-primary-color);
+        border-radius: 1rem;
       }
     }
   }

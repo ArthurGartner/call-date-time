@@ -78,7 +78,8 @@ html {
   --background-color-secondary: #ebebeb;
   --item-background: #ffffff;
   --accent-color: #cacaca;
-  --text-primary-color: #222;
+  --text-primary-color: #000;
+  --text-primary-color-inverse: #fff;
   --text-muted: gray;
   --cal-highlight: #e14435;
 }
@@ -89,7 +90,8 @@ html {
   --background-color-secondary: #2d2d30;
   --item-background: #1d1d1e;
   --accent-color: #3f3f3f;
-  --text-primary-color: #ddd;
+  --text-primary-color: #fff;
+  --text-primary-color-inverse: #000;
   --text-muted: gray;
   --cal-highlight: #e8493d;
 }
