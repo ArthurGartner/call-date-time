@@ -3,8 +3,8 @@
     <div class="container">
       <nav class="navbar navbar-expand-lg justify-content-between">
         <router-link to="/" class="navbar-brand"
-          >call <span class="logo_code">datetime()</span></router-link
-        >
+          ><img src="@/assets/logo.svg"
+        /></router-link>
         <button
           class="navbar-toggler collapsed"
           type="button"
@@ -74,11 +74,10 @@ export default {
   z-index: 10;
 }
 .navbar-brand {
-  text-decoration: none;
-  font-weight: 600;
-  color: #1b6fe4;
-  font-size: 1.5rem;
-  font-family: "Courier New";
+  img {
+    height: 28px;
+    margin: 0px;
+  }
 }
 
 .nav-item {

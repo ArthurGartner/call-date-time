@@ -43,11 +43,24 @@
           class="date-image d-flex flex-column text-center align-middle"
         >
           <div class="date-val d-flex flex-column">
-            <div class="inline-block my-auto">
+            <div
+              :class="[
+                'inline-block',
+                'my-auto',
+                dateObject1.isCurDay
+                  ? 'current-date-text'
+                  : 'not-current-date-text',
+              ]"
+            >
               {{ dateObject1?.date.getDate() }}
             </div>
           </div>
-          <div class="left-date"></div>
+          <div
+            :class="[
+              'date-background',
+              dateObject1.isCurDay ? 'current-date' : 'not-current-date',
+            ]"
+          ></div>
         </div>
         <div class="middle-content mx-auto my-auto">
           <div v-if="!dateObject1" class=".noselection">
@@ -60,11 +73,24 @@
           class="date-image d-flex flex-column text-center align-middle"
         >
           <div class="date-val d-flex flex-column">
-            <div class="inline-block my-auto">
+            <div
+              :class="[
+                'inline-block',
+                'my-auto',
+                dateObject2.isCurDay
+                  ? 'current-date-text'
+                  : 'not-current-date-text',
+              ]"
+            >
               {{ dateObject2?.date.getDate() }}
             </div>
           </div>
-          <div class="left-date"></div>
+          <div
+            :class="[
+              'date-background',
+              dateObject2.isCurDay ? 'current-date' : 'not-current-date',
+            ]"
+          ></div>
         </div>
       </div>
     </div>
@@ -98,6 +124,20 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.not-current-date {
+  background: var(--text-primary-color);
+}
+.current-date {
+  background: var(--cal-highlight);
+}
+
+.current-date-text {
+  color: var(--text-primary-color);
+}
+
+.not-current-date-text {
+  color: var(--text-primary-color-inverse);
+}
 .date-selection-view {
   .component-container {
     position: relative;
@@ -129,9 +169,10 @@ export default {
           z-index: 3;
           height: 100%;
           flex-grow: 1;
+          color: var(--text-primary-color-inverse);
         }
 
-        .left-date {
+        .date-background {
           position: absolute;
           left: 0;
           right: 0;
@@ -140,7 +181,6 @@ export default {
           margin: auto;
           width: 4rem;
           height: 4rem;
-          border: 3px solid var(--cal-highlight);
           border-radius: 2rem;
           z-index: 1;
         }

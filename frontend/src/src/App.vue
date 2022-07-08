@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="screen-area">
     <NavBar />
     <div class="page-view"><router-view /></div>
   </div>
@@ -68,6 +68,10 @@ export default {
   font-family: "Inter", Courier, monospace;
 }
 
+body {
+  background: var(--background-color-primary);
+}
+
 html {
   background-color: var(--background-color-primary);
   padding: env(safe-area-inset);
@@ -96,7 +100,11 @@ html {
   --cal-highlight: #e8493d;
 }
 
+.screen-area {
+  background: var(--background-color-primary);
+}
 .page-view {
-  padding-top: 62px;
+  padding-top: 55px;
+  height: 100vh;
 }
 </style>
