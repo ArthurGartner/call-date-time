@@ -86,6 +86,8 @@ html {
   --text-primary-color-inverse: #fff;
   --text-muted: gray;
   --cal-highlight: #e14435;
+  --cal-highlight-top: #f37271;
+  --cal-highlight-bottom: #e44f48;
 }
 
 /* Define styles for the root window with dark - mode preference */
@@ -98,6 +100,8 @@ html {
   --text-primary-color-inverse: #000;
   --text-muted: gray;
   --cal-highlight: #e8493d;
+  --cal-highlight-top: #f37271;
+  --cal-highlight-bottom: #e44f48;
 }
 
 .screen-area {

@@ -289,7 +289,12 @@ export default {
     flex-direction: column;
 
     .cal-header {
-      background: var(--cal-highlight);
+      background: var(--cal-highlight-top);
+      background: linear-gradient(
+        180deg,
+        var(--cal-highlight-top) 0%,
+        var(--cal-highlight-bottom) 100%
+      );
       height: auto;
       padding-top: 5px;
       padding-bottom: 5px;

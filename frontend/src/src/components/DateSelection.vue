@@ -128,7 +128,11 @@ export default {
   background: var(--text-primary-color);
 }
 .current-date {
-  background: var(--cal-highlight);
+  background: linear-gradient(
+    180deg,
+    var(--cal-highlight-top) 0%,
+    var(--cal-highlight-bottom) 100%
+  );
 }
 
 .current-date-text {
@@ -150,7 +154,11 @@ export default {
     flex-direction: column;
 
     .header {
-      background: var(--cal-highlight);
+      background: linear-gradient(
+        180deg,
+        var(--cal-highlight-top) 0%,
+        var(--cal-highlight-bottom) 100%
+      );
       height: 30px;
       padding-left: 20px;
       padding-right: 20px;
