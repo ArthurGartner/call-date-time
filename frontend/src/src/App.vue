@@ -88,6 +88,8 @@ html {
   --cal-highlight: #e14435;
   --cal-highlight-top: #f37271;
   --cal-highlight-bottom: #e44f48;
+  --cal-selected-top: rgb(99, 99, 99);
+  --cal-selected-bottom: #000;
 }
 
 /* Define styles for the root window with dark - mode preference */
@@ -102,6 +104,8 @@ html {
   --cal-highlight: #e8493d;
   --cal-highlight-top: #f37271;
   --cal-highlight-bottom: #e44f48;
+  --cal-selected-top: #fff;
+  --cal-selected-bottom: rgb(207, 207, 207);
 }
 
 .screen-area {

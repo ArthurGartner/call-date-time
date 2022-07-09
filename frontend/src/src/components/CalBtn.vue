@@ -40,7 +40,7 @@ export default {
 @media (hover: hover) {
   .btn-container:hover {
     background: var(--background-color-secondary);
-    color: #d33e2a;
+    color: var(--cal-highlight-top);
   }
 }
 </style>

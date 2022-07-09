@@ -2,146 +2,81 @@
   <div class="date-selection-view">
     <div class="component-container d-flex">
       <div class="header d-flex justify-content-between">
-        <!-- Section for left header, shows date and year for selection -->
         <div class="left-header">
-          <!-- Check if this dateobject exists -->
-          <div v-if="dateObject1">
-            <div
-              v-if="
-                currentDay == this.dateObject1?.date.getDate() &&
-                currentMonth == dateObject1?.date.getMonth() &&
-                currentYear == dateObject1?.date.getFullYear()
-              "
-            >
-              <p>
-                Today - {{ getMonthName(dateObject1?.date.getMonth()) }}
-                {{ dateObject1?.date.getFullYear() }}
-              </p>
-            </div>
-            <div v-else>
-              <p>
-                {{ getMonthName(dateObject1?.date.getMonth()) }}
-                {{ dateObject1?.date.getFullYear() }}
-              </p>
-            </div>
-          </div>
+          <DateSelectionHeader :dateObject="date1" />
         </div>
         <div class="right-header">
-          <!-- Check if dateobject exists for second variable -->
-          <div v-if="dateObject2">
-            <p>
-              {{ getMonthName(dateObject2?.date.getMonth()) }}
-              {{ dateObject2?.date.getFullYear() }}
-            </p>
-          </div>
+          <DateSelectionHeader :dateObject="date2" />
         </div>
       </div>
       <!-- Section for bottom, info portion of date selection component -->
       <div class="content d-flex justify-content-between">
-        <div
-          v-if="dateObject1"
-          class="date-image d-flex flex-column text-center align-middle"
-        >
-          <div class="date-val d-flex flex-column">
-            <div
-              :class="[
-                'inline-block',
-                'my-auto',
-                dateObject1.isCurDay
-                  ? 'current-date-text'
-                  : 'not-current-date-text',
-              ]"
-            >
-              {{ dateObject1?.date.getDate() }}
-            </div>
-          </div>
-          <div
-            :class="[
-              'date-background',
-              dateObject1.isCurDay ? 'current-date' : 'not-current-date',
-            ]"
-          ></div>
-        </div>
+        <DateSelectionIcon :dateObject="date1" />
         <div class="middle-content mx-auto my-auto">
-          <div v-if="!dateObject1" class=".noselection">
-            <h3>No dates selected</h3>
-            <p class="text-center">Select a date above</p>
+          <div v-if="!date1" class=".noselection">
+            <h3 class="text-center">No dates selected</h3>
+            <p class="text-center">Select a date from the calendar</p>
           </div>
         </div>
-        <div
-          v-if="dateObject2"
-          class="date-image d-flex flex-column text-center align-middle"
-        >
-          <div class="date-val d-flex flex-column">
-            <div
-              :class="[
-                'inline-block',
-                'my-auto',
-                dateObject2.isCurDay
-                  ? 'current-date-text'
-                  : 'not-current-date-text',
-              ]"
-            >
-              {{ dateObject2?.date.getDate() }}
-            </div>
-          </div>
-          <div
-            :class="[
-              'date-background',
-              dateObject2.isCurDay ? 'current-date' : 'not-current-date',
-            ]"
-          ></div>
-        </div>
+        <DateSelectionIcon :dateObject="date2" />
       </div>
     </div>
   </div>
 </template>
 <script>
+import DateSelectionHeader from "./DateSelectionHeader.vue";
+import DateSelectionIcon from "./DateSelectionDateIcon.vue";
 export default {
   name: "date-selection",
   props: {
     dateObject1: Object,
     dateObject2: Object,
   },
+  watch: {
+    $props: {
+      handler: function (val) {
+        if (val.dateObject1 && val.dateObject2) {
+          if (val.dateObject1.date < val.dateObject2.date) {
+            this.date1 = this.dateObject1;
+            this.date2 = this.dateObject2;
+          } else {
+            this.date2 = this.dateObject1;
+            this.date1 = this.dateObject2;
+          }
+        } else if (val.dateObject1) {
+          this.date1 = this.dateObject1;
+          this.date2 = null;
+        } else {
+          this.date1 = null;
+          this.date2 = null;
+        }
+
+        console.log("watch", val.dateObject1);
+      },
+      deep: true,
+    },
+  },
+  components: {
+    DateSelectionHeader,
+    DateSelectionIcon,
+  },
   data() {
     return {
       currentDay: new Date().getDate(),
       currentMonth: new Date().getMonth(),
       currentYear: new Date().getFullYear(),
+      date1: null,
+      date2: null,
     };
   },
   methods: {
     loadDate(dateObject) {
       console.log(dateObject.date);
     },
-    getMonthName(num) {
-      const date = new Date();
-      date.setMonth(num);
-      const month = date.toLocaleString(undefined, { month: "long" });
-      return month;
-    },
   },
 };
 </script>
 <style lang="scss" scoped>
-.not-current-date {
-  background: var(--text-primary-color);
-}
-.current-date {
-  background: linear-gradient(
-    180deg,
-    var(--cal-highlight-top) 0%,
-    var(--cal-highlight-bottom) 100%
-  );
-}
-
-.current-date-text {
-  color: var(--text-primary-color);
-}
-
-.not-current-date-text {
-  color: var(--text-primary-color-inverse);
-}
 .date-selection-view {
   .component-container {
     position: relative;
@@ -168,31 +103,6 @@ export default {
     .content {
       position: relative;
       flex-grow: 1;
-      .date-image {
-        width: 80px;
-        font-size: 2.7rem;
-        position: relative;
-
-        .date-val {
-          z-index: 3;
-          height: 100%;
-          flex-grow: 1;
-          color: var(--text-primary-color-inverse);
-        }
-
-        .date-background {
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          margin: auto;
-          width: 4rem;
-          height: 4rem;
-          border-radius: 2rem;
-          z-index: 1;
-        }
-      }
 
       .middle-content {
         margin: 0px;
