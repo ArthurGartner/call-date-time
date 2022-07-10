@@ -3,22 +3,27 @@
     <div class="component-container d-flex">
       <div class="header d-flex justify-content-between">
         <div class="left-header">
-          <DateSelectionHeader :dateObject="date1" />
+          <DateSelectionHeader :dateObject="dateObject1" />
         </div>
         <div class="right-header">
-          <DateSelectionHeader :dateObject="date2" />
+          <DateSelectionHeader :dateObject="dateObject2" />
         </div>
       </div>
       <!-- Section for bottom, info portion of date selection component -->
       <div class="content d-flex justify-content-between">
-        <DateSelectionIcon :dateObject="date1" />
+        <DateSelectionIcon :dateObject="dateObject1" />
         <div class="middle-content mx-auto my-auto">
-          <div v-if="!date1" class=".noselection">
+          <div v-if="!dateObject1" class=".noselection">
             <h3 class="text-center">No dates selected</h3>
             <p class="text-center">Select a date from the calendar</p>
           </div>
+          <div v-if="dateObject1 && dateObject2" class="range-stats">
+            <div>Total Hours: {{ calculateRangeInHours() }}</div>
+            <div>Total Days: {{ calculateRangeInDays() }}</div>
+            <div>Total Weekends: {{ calculateRangeInWeekends() }}</div>
+          </div>
         </div>
-        <DateSelectionIcon :dateObject="date2" />
+        <DateSelectionIcon :dateObject="dateObject2" />
       </div>
     </div>
   </div>
@@ -32,30 +37,6 @@ export default {
     dateObject1: Object,
     dateObject2: Object,
   },
-  watch: {
-    $props: {
-      handler: function (val) {
-        if (val.dateObject1 && val.dateObject2) {
-          if (val.dateObject1.date < val.dateObject2.date) {
-            this.date1 = this.dateObject1;
-            this.date2 = this.dateObject2;
-          } else {
-            this.date2 = this.dateObject1;
-            this.date1 = this.dateObject2;
-          }
-        } else if (val.dateObject1) {
-          this.date1 = this.dateObject1;
-          this.date2 = null;
-        } else {
-          this.date1 = null;
-          this.date2 = null;
-        }
-
-        console.log("watch", val.dateObject1);
-      },
-      deep: true,
-    },
-  },
   components: {
     DateSelectionHeader,
     DateSelectionIcon,
@@ -65,13 +46,39 @@ export default {
       currentDay: new Date().getDate(),
       currentMonth: new Date().getMonth(),
       currentYear: new Date().getFullYear(),
-      date1: null,
-      date2: null,
     };
   },
   methods: {
-    loadDate(dateObject) {
-      console.log(dateObject.date);
+    //Return the number of days that make up the range
+    calculateRangeInDays() {
+      if (this.dateObject1 && this.dateObject2) {
+        let delta =
+          this.dateObject2.date.getTime() - this.dateObject1.date.getTime();
+        //Need to add one since we are treating start and end dates as inclusive.
+        return Math.ceil(delta / (1000 * 3600 * 24)) + 1;
+      }
+    },
+    calculateRangeInHours() {
+      if (this.dateObject1 && this.dateObject2) {
+        let delta =
+          this.dateObject2.date.getTime() - this.dateObject1.date.getTime();
+        //Need to add one since we are treating start and end dates as inclusive.
+        return Math.ceil(delta / (1000 * 3600)) + 24;
+      }
+    },
+    calculateRangeInWeekends() {
+      let weekends = 0;
+      for (
+        var d = new Date(this.dateObject1.date);
+        d <= this.dateObject2.date;
+        d.setDate(d.getDate() + 1)
+      ) {
+        if (d.getDay() == 0 || d.getDay() == 6) {
+          weekends++;
+        }
+      }
+
+      return weekends / 2;
     },
   },
 };
@@ -106,6 +113,10 @@ export default {
 
       .middle-content {
         margin: 0px;
+
+        .range-stats {
+          font-size: 1rem;
+        }
 
         h3 {
           margin-bottom: 0px;

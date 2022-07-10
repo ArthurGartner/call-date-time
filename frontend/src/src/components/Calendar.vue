@@ -50,20 +50,22 @@
             v-for="dateObject in curMonthDateObjects"
             :key="dateObject.date.getDate()"
           >
+            <div v-if="dateObject.isFirst" class="first-date"></div>
+            <div v-if="dateObject.isSecond" class="second-date"></div>
             <!-- display for when current day is selected -->
             <div
               class="curday"
               v-if="dateObject.isSelected && dateObject.isCurDay"
             ></div>
             <!-- Display for days other than current day when selected -->
+
             <div
               v-if="dateObject.isSelected && !dateObject.isCurDay"
               class="selected-day"
             ></div>
             <div class="day-selection" />
             <div v-if="dateObject.isBetween" class="inbetween-date"></div>
-            <div v-if="dateObject.isFirst" class="first-date"></div>
-            <div v-if="dateObject.isSecond" class="second-date"></div>
+
             <p
               :class="[
                 dateObject.isSelected && !dateObject.isCurDay
@@ -119,7 +121,6 @@ export default {
     dayClicked(dateObject) {
       //Toggle isSelected attribute for dateObject
       dateObject.isSelected = !dateObject.isSelected;
-
       //Add or remove from tracking
       if (dateObject.isSelected) {
         //Check which holding variable is up next for new date object assignment
@@ -273,6 +274,9 @@ export default {
         this.selectedMonth++;
       }
 
+      //Create temp date object to send to hour summary to indicate current month view
+      let newDate = new Date(this.selectedYear, this.selectedMonth, 1);
+      this.$emit("new-month", newDate);
       this.updateDateArray(this.selectedMonth, this.selectedYear);
     },
     //Decrements instance of month. Does not need parameters.
@@ -283,6 +287,10 @@ export default {
       } else {
         this.selectedMonth--;
       }
+
+      //Create temp date object to send to hour summary to indicate current month view
+      let newDate = new Date(this.selectedYear, this.selectedMonth, 1);
+      this.$emit("new-month", newDate);
       this.updateDateArray(this.selectedMonth, this.selectedYear);
     },
     getPrevMonthTrailing(numOfMonth, numOfYear) {
