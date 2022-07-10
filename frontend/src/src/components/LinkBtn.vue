@@ -1,13 +1,13 @@
 <template>
   <div class="link-btn-container">
-    <p class="text-center pt-2 pb-2">See the code</p>
+    <p class="text-center pt-2 pb-2">{{ text }}</p>
   </div>
 </template>
 <script>
 export default {
   name: "LinkBtn",
   props: {
-    type: String,
+    text: String,
   },
 };
 </script>
@@ -21,5 +21,6 @@ export default {
     rgba(25, 100, 176, 1) 100%
   );
   border-radius: 25px;
+  color: #fff;
 }
 </style>

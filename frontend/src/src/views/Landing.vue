@@ -49,19 +49,22 @@
                 calendars using the
                 <span id="restful-string">RESTful</span> API.
               </h4>
-              <h4 class="text-center fadeInBottomOpenSource mb-5">
+              <h4 class="text-center fadeInBottomOpenSource mt-1 mb-2">
                 <span id="opensource-string" style="text-decoration: underline"
                   >All</span
                 >
                 opensource
               </h4>
             </div>
-            <div class="row">
-              <div class="col-md-6">
-                <LinkBtn />
+            <div class="row fadeInBottomButtons">
+              <div class="col-md-4">
+                <LinkBtn text="Learn More" />
               </div>
-              <div class="col-md-6">
-                <LinkBtn />
+              <div class="col-md-4">
+                <LinkBtn text="View Feature List" />
+              </div>
+              <div class="col-md-4">
+                <LinkBtn text="Calculate Working Hours" />
               </div>
             </div>
           </div>
@@ -142,13 +145,19 @@ export default {
   animation-name: fadeInBottom;
   animation-duration: 1s;
   animation-fill-mode: both;
-  animation-delay: 6.9s;
+  animation-delay: 7.4s;
 }
 .fadeInBottomOpenSource {
   animation-name: fadeInBottom;
   animation-duration: 1s;
   animation-fill-mode: both;
-  animation-delay: 7.9s;
+  animation-delay: 8.4s;
+}
+.fadeInBottomButtons {
+  animation-name: fadeInBottom;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-delay: 9.4s;
 }
 
 .fadeDate {
