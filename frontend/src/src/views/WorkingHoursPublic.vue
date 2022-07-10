@@ -14,12 +14,14 @@
               @date-add="dateAdd"
               @date-remove="dateRemove"
               @new-month="newMonth"
+              :dateChanged="dateSelect"
             />
           </div>
           <DateSelection
             class="mt-3"
             :dateObject1="dateArray[0]"
             :dateObject2="dateArray[1]"
+            @date-clicked="dateClicked"
           />
         </div>
         <div class="col-md-6">
@@ -56,6 +58,7 @@ export default {
       dateObject2: null,
       dateArray: [null, null],
       viewingDate: null,
+      dateSelect: null,
     };
   },
   methods: {
@@ -97,6 +100,9 @@ export default {
     },
     newMonth(monthData) {
       this.viewingDate = monthData;
+    },
+    dateClicked(dateObject) {
+      this.dateSelect = dateObject;
     },
   },
 };

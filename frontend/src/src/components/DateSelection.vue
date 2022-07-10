@@ -11,7 +11,10 @@
       </div>
       <!-- Section for bottom, info portion of date selection component -->
       <div class="content d-flex justify-content-between">
-        <DateSelectionIcon :dateObject="dateObject1" />
+        <DateSelectionIcon
+          :dateObject="dateObject1"
+          @date-clicked="$emit('date-clicked', dateObject1)"
+        />
         <div class="middle-content mx-auto my-auto">
           <div v-if="!dateObject1" class=".noselection">
             <h3 class="text-center">No dates selected</h3>
@@ -23,7 +26,10 @@
             <div>Total Weekends: {{ calculateRangeInWeekends() }}</div>
           </div>
         </div>
-        <DateSelectionIcon :dateObject="dateObject2" />
+        <DateSelectionIcon
+          :dateObject="dateObject2"
+          @date-clicked="$emit('date-clicked', dateObject2)"
+        />
       </div>
     </div>
   </div>

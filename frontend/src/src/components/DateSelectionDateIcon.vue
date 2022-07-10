@@ -1,5 +1,6 @@
 <template>
   <div
+    @click="$emit('date-clicked')"
     v-if="this.dateObject"
     class="date-image d-flex flex-column text-center align-middle"
   >
@@ -37,6 +38,7 @@ export default {
   width: 80px;
   font-size: 2.7rem;
   position: relative;
+  cursor: pointer;
 
   .date-val {
     z-index: 3;

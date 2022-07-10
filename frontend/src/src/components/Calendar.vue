@@ -99,6 +99,17 @@ export default {
   components: {
     CalBtn,
   },
+  props: {
+    dateChanged: Object,
+  },
+  watch: {
+    dateChanged: function (val) {
+      //Update selected year and month to show calendar
+      this.selectedYear = val.date.getFullYear();
+      this.selectedMonth = val.date.getMonth();
+      this.updateDateArray(this.selectedMonth, this.selectedYear);
+    },
+  },
   data() {
     return {
       currentDay: new Date().getDate(),
