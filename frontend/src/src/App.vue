@@ -86,6 +86,12 @@ html {
   --text-primary-color-inverse: #fff;
   --text-muted: gray;
   --cal-highlight: #e14435;
+  --cal-highlight-top: #f37271;
+  --cal-highlight-bottom: #e44f48;
+  --cal-selected-top: rgb(99, 99, 99);
+  --cal-selected-bottom: #000;
+  --cal-event: #aeaeb2;
+  --cal-holiday: #007aff;
 }
 
 /* Define styles for the root window with dark - mode preference */
@@ -98,6 +104,12 @@ html {
   --text-primary-color-inverse: #000;
   --text-muted: gray;
   --cal-highlight: #e8493d;
+  --cal-highlight-top: #f37271;
+  --cal-highlight-bottom: #e44f48;
+  --cal-selected-top: #fff;
+  --cal-selected-bottom: rgb(207, 207, 207);
+  --cal-event: #636366;
+  --cal-holiday: #0a84ff;
 }
 
 .screen-area {

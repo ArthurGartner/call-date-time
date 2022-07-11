@@ -1,7 +1,7 @@
 <template>
   <div class="calendar">
-    <div class="cal-nav text-center">
-      <h1 class="d-inline-block">{{ selectedYear }}</h1>
+    <div class="cal-nav text-start">
+      <h2 class="d-inline-block">{{ selectedYear }}</h2>
     </div>
     <div class="main-cal-view">
       <div class="cal-header text-center">
@@ -14,18 +14,18 @@
             class="prev-month-btn my-auto mx-3"
           />
           <div class="month">
-            <h1 class="my-auto">{{ getMonthName(selectedMonth) }}</h1>
+            <h2 class="my-auto">{{ getMonthName(selectedMonth) }}</h2>
           </div>
           <CalBtn @btn-click="nextMonth" class="next-month-btn my-auto mx-3" />
         </div>
-      </div>
-      <div class="days-view">
         <div class="days-of-week">
           <!-- //Should be cleaned up -->
           <div v-for="(day, index) in days" :key="index">
-            <p>{{ day }}</p>
+            <p style="margin: 0px">{{ day }}</p>
           </div>
         </div>
+      </div>
+      <div class="days-view">
         <div class="individual-days">
           <div
             @click="prevMonth"
@@ -50,17 +50,29 @@
             v-for="dateObject in curMonthDateObjects"
             :key="dateObject.date.getDate()"
           >
+            <div
+              v-if="dateObject.isEvent"
+              :class="[
+                'date-event',
+                dateObject.isHoliday ? 'is-holiday' : 'is-event',
+              ]"
+            ></div>
+            <div v-if="dateObject.isFirst" class="first-date"></div>
+            <div v-if="dateObject.isSecond" class="second-date"></div>
             <!-- display for when current day is selected -->
             <div
               class="curday"
               v-if="dateObject.isSelected && dateObject.isCurDay"
             ></div>
             <!-- Display for days other than current day when selected -->
+
             <div
               v-if="dateObject.isSelected && !dateObject.isCurDay"
               class="selected-day"
             ></div>
             <div class="day-selection" />
+            <div v-if="dateObject.isBetween" class="inbetween-date"></div>
+
             <p
               :class="[
                 dateObject.isSelected && !dateObject.isCurDay
@@ -89,10 +101,27 @@
 </template>
 <script>
 import CalBtn from "./CalBtn.vue";
+import { localWorkingCalInit } from "@/logic/calendar";
 export default {
   name: "Calendar-Component",
   components: {
     CalBtn,
+  },
+  beforeMount() {
+    //Load variable with localCal Map
+    this.localCal = localWorkingCalInit();
+  },
+  props: {
+    dateChanged: Object,
+  },
+  watch: {
+    //Watch the datechanged property and update view when property is changed
+    dateChanged: function (val) {
+      //Update selected year and month to show calendar
+      this.selectedYear = val.date.getFullYear();
+      this.selectedMonth = val.date.getMonth();
+      this.updateDateArray(this.selectedMonth, this.selectedYear);
+    },
   },
   data() {
     return {
@@ -106,17 +135,18 @@ export default {
       selectedDateObject1: null,
       selectedDateObject2: null,
       pullBucket1: true,
+      localCal: null,
     };
   },
   mounted() {
     this.updateDateArrayCurrentSelection();
+    this.$emit("local-cal", this.localCal);
   },
   methods: {
     //Handle date click
     dayClicked(dateObject) {
       //Toggle isSelected attribute for dateObject
       dateObject.isSelected = !dateObject.isSelected;
-
       //Add or remove from tracking
       if (dateObject.isSelected) {
         //Check which holding variable is up next for new date object assignment
@@ -156,7 +186,7 @@ export default {
       this.updateDateArrayCurrentSelection();
     },
     updateDateArrayCurrentSelection() {
-      this.updateDateArray(this.currentMonth, this.currentYear);
+      this.updateDateArray(this.selectedMonth, this.selectedYear);
     },
     //Load days for current selected month into array and returns array of date objects
     updateDateArray(month, year) {
@@ -174,8 +204,29 @@ export default {
           date: new Date(d),
           info: "",
           isSelected: false,
+          isFirst: false,
+          isSecond: false,
           isCurDay: false,
+          isBetween: false,
+          isEvent: false,
+          eventName: "",
+          isHoliday: false,
         };
+
+        //Check if date in dateObject is an Event according to passed Calendar
+        if (
+          this.localCal.has(
+            customDateObject.date.toISOString().substring(0, 10)
+          )
+        ) {
+          customDateObject.isEvent = true;
+          customDateObject.eventName = this.localCal.get(
+            customDateObject.date.toISOString().substring(0, 10)
+          ).eventName;
+          customDateObject.isHoliday = this.localCal.get(
+            customDateObject.date.toISOString().substring(0, 10)
+          ).isHoliday;
+        }
 
         //Determine if this date is one of selected dates
         if (
@@ -185,6 +236,44 @@ export default {
             this.selectedDateObject2?.date.getTime()
         ) {
           customDateObject.isSelected = true;
+
+          //Ineffecient way of getting which end of date range current object is at. Need to refractor.
+          if (this.selectedDateObject1 && this.selectedDateObject2) {
+            if (
+              customDateObject.date.getTime() ===
+              this.selectedDateObject1?.date.getTime()
+            ) {
+              if (
+                this.selectedDateObject1?.date.getTime() <
+                this.selectedDateObject2?.date.getTime()
+              ) {
+                customDateObject.isFirst = true;
+              } else {
+                customDateObject.isSecond = true;
+              }
+            } else {
+              if (
+                this.selectedDateObject2?.date.getTime() <
+                this.selectedDateObject1?.date.getTime()
+              ) {
+                customDateObject.isFirst = true;
+              } else {
+                customDateObject.isSecond = true;
+              }
+            }
+          }
+        } else {
+          //Check if date falls between 2 selected dates IF there are two dates selected
+          if (this.selectedDateObject1 && this.selectedDateObject2) {
+            if (
+              (customDateObject.date > this.selectedDateObject1.date &&
+                customDateObject.date < this.selectedDateObject2.date) ||
+              (customDateObject.date < this.selectedDateObject1.date &&
+                customDateObject.date > this.selectedDateObject2.date)
+            ) {
+              customDateObject.isBetween = true;
+            }
+          }
         }
 
         //Evaluate whether this date is the current date according to client time
@@ -199,6 +288,7 @@ export default {
         localArray.push(customDateObject);
       }
 
+      //Update date objects array
       this.curMonthDateObjects = localArray;
     },
     getDaysInMonth(year, month) {
@@ -228,6 +318,9 @@ export default {
         this.selectedMonth++;
       }
 
+      //Create temp date object to send to hour summary to indicate current month view
+      let newDate = new Date(this.selectedYear, this.selectedMonth, 1);
+      this.$emit("new-month", newDate);
       this.updateDateArray(this.selectedMonth, this.selectedYear);
     },
     //Decrements instance of month. Does not need parameters.
@@ -238,6 +331,10 @@ export default {
       } else {
         this.selectedMonth--;
       }
+
+      //Create temp date object to send to hour summary to indicate current month view
+      let newDate = new Date(this.selectedYear, this.selectedMonth, 1);
+      this.$emit("new-month", newDate);
       this.updateDateArray(this.selectedMonth, this.selectedYear);
     },
     getPrevMonthTrailing(numOfMonth, numOfYear) {
@@ -289,10 +386,21 @@ export default {
     flex-direction: column;
 
     .cal-header {
-      background: var(--cal-highlight);
+      background: var(--cal-highlight-top);
+      background: linear-gradient(
+        180deg,
+        var(--cal-highlight-top) 0%,
+        var(--cal-highlight-bottom) 100%
+      );
       height: auto;
       padding-top: 5px;
       padding-bottom: 5px;
+
+      .days-of-week {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+      }
     }
 
     .days-view {
@@ -300,12 +408,6 @@ export default {
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      .days-of-week {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        text-align: center;
-        background: var(--cal-highlight);
-      }
 
       .individual-days {
         display: grid;
@@ -363,7 +465,12 @@ export default {
             margin-right: auto;
             width: 2rem;
             height: 2rem;
-            background: var(--cal-highlight);
+            background: var(--cal-highlight-top);
+            background: linear-gradient(
+              180deg,
+              var(--cal-highlight-top) 0%,
+              var(--cal-highlight-bottom) 100%
+            );
             border-radius: 1rem;
           }
 
@@ -375,8 +482,81 @@ export default {
             margin-right: auto;
             width: 2rem;
             height: 2rem;
-            background: var(--text-primary-color);
+            background: var(--cal-highlight-top);
+            background: linear-gradient(
+              180deg,
+              var(--cal-selected-top) 0%,
+              var(--cal-selected-bottom) 100%
+            );
             border-radius: 1rem;
+          }
+
+          .inbetween-date {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            height: 1.8rem;
+            background: var(--cal-highlight-top);
+            background: linear-gradient(
+              180deg,
+              var(--cal-selected-top) 0%,
+              var(--cal-selected-bottom) 100%
+            );
+            opacity: 10%;
+          }
+          .date-event {
+            position: absolute;
+            height: 0.3rem;
+            width: 0.3rem;
+            border-radius: 0.3rem;
+            left: 0;
+            right: 0;
+            margin: auto;
+            top: 15%;
+            z-index: 3;
+          }
+
+          .is-holiday {
+            background: var(--cal-holiday);
+          }
+
+          .is-event {
+            background: var(--cal-event);
+          }
+          .first-date {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: 0;
+            width: 50%;
+            height: 1.8rem;
+            background: var(--cal-highlight-top);
+            background: linear-gradient(
+              180deg,
+              var(--cal-selected-top) 0%,
+              var(--cal-selected-bottom) 100%
+            );
+            opacity: 10%;
+          }
+          .second-date {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin-left: 0;
+            margin-right: auto;
+            width: 50%;
+            height: 1.8rem;
+            background: var(--cal-highlight-top);
+            background: linear-gradient(
+              180deg,
+              var(--cal-selected-top) 0%,
+              var(--cal-selected-bottom) 100%
+            );
+            opacity: 10%;
           }
 
           p {
@@ -408,7 +588,12 @@ export default {
         margin-right: auto;
         width: 2rem;
         height: 2rem;
-        background: var(--cal-highlight);
+        background: var(--cal-highlight-top);
+        background: linear-gradient(
+          180deg,
+          var(--cal-highlight-top) 0%,
+          var(--cal-highlight-bottom) 100%
+        );
         border-radius: 1rem;
       }
     }
@@ -426,7 +611,12 @@ export default {
         margin-right: auto;
         width: 2rem;
         height: 2rem;
-        background: var(--text-primary-color);
+        background: var(--cal-highlight-top);
+        background: linear-gradient(
+          180deg,
+          var(--cal-selected-top) 0%,
+          var(--cal-selected-bottom) 100%
+        );
         border-radius: 1rem;
       }
     }

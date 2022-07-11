@@ -1,7 +1,7 @@
 <template>
   <div class="title-group">
     <div class="title">
-      <h2>{{ title }}</h2>
+      <h1>{{ title }}</h1>
     </div>
     <div class="subtitle">
       <p class="mb-1">{{ subtitle }}</p>
@@ -23,7 +23,7 @@ export default {
   color: var(--text-primary-color);
 
   .title {
-    h2 {
+    h1 {
       margin: 0px;
     }
   }
