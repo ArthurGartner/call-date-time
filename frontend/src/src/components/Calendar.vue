@@ -50,6 +50,13 @@
             v-for="dateObject in curMonthDateObjects"
             :key="dateObject.date.getDate()"
           >
+            <div
+              v-if="dateObject.isEvent"
+              :class="[
+                'date-event',
+                dateObject.isHoliday ? 'is-holiday' : 'is-event',
+              ]"
+            ></div>
             <div v-if="dateObject.isFirst" class="first-date"></div>
             <div v-if="dateObject.isSecond" class="second-date"></div>
             <!-- display for when current day is selected -->
@@ -94,15 +101,21 @@
 </template>
 <script>
 import CalBtn from "./CalBtn.vue";
+import { localWorkingCalInit } from "@/logic/calendar";
 export default {
   name: "Calendar-Component",
   components: {
     CalBtn,
   },
+  beforeMount() {
+    //Load variable with localCal Map
+    this.localCal = localWorkingCalInit();
+  },
   props: {
     dateChanged: Object,
   },
   watch: {
+    //Watch the datechanged property and update view when property is changed
     dateChanged: function (val) {
       //Update selected year and month to show calendar
       this.selectedYear = val.date.getFullYear();
@@ -122,10 +135,12 @@ export default {
       selectedDateObject1: null,
       selectedDateObject2: null,
       pullBucket1: true,
+      localCal: null,
     };
   },
   mounted() {
     this.updateDateArrayCurrentSelection();
+    this.$emit("local-cal", this.localCal);
   },
   methods: {
     //Handle date click
@@ -193,7 +208,25 @@ export default {
           isSecond: false,
           isCurDay: false,
           isBetween: false,
+          isEvent: false,
+          eventName: "",
+          isHoliday: false,
         };
+
+        //Check if date in dateObject is an Event according to passed Calendar
+        if (
+          this.localCal.has(
+            customDateObject.date.toISOString().substring(0, 10)
+          )
+        ) {
+          customDateObject.isEvent = true;
+          customDateObject.eventName = this.localCal.get(
+            customDateObject.date.toISOString().substring(0, 10)
+          ).eventName;
+          customDateObject.isHoliday = this.localCal.get(
+            customDateObject.date.toISOString().substring(0, 10)
+          ).isHoliday;
+        }
 
         //Determine if this date is one of selected dates
         if (
@@ -473,6 +506,25 @@ export default {
               var(--cal-selected-bottom) 100%
             );
             opacity: 10%;
+          }
+          .date-event {
+            position: absolute;
+            height: 0.3rem;
+            width: 0.3rem;
+            border-radius: 0.3rem;
+            left: 0;
+            right: 0;
+            margin: auto;
+            top: 15%;
+            z-index: 3;
+          }
+
+          .is-holiday {
+            background: var(--cal-holiday);
+          }
+
+          .is-event {
+            background: var(--cal-event);
           }
           .first-date {
             position: absolute;

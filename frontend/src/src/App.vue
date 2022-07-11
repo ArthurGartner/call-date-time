@@ -90,6 +90,8 @@ html {
   --cal-highlight-bottom: #e44f48;
   --cal-selected-top: rgb(99, 99, 99);
   --cal-selected-bottom: #000;
+  --cal-event: #aeaeb2;
+  --cal-holiday: #007aff;
 }
 
 /* Define styles for the root window with dark - mode preference */
@@ -106,6 +108,8 @@ html {
   --cal-highlight-bottom: #e44f48;
   --cal-selected-top: #fff;
   --cal-selected-bottom: rgb(207, 207, 207);
+  --cal-event: #636366;
+  --cal-holiday: #0a84ff;
 }
 
 .screen-area {

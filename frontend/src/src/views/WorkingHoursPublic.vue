@@ -14,6 +14,7 @@
               @date-add="dateAdd"
               @date-remove="dateRemove"
               @new-month="newMonth"
+              @local-cal="updateLocalCal"
               :dateChanged="dateSelect"
             />
           </div>
@@ -30,6 +31,7 @@
             :dateObject1="dateArray[0]"
             :dateObject2="dateArray[1]"
             :viewingDate="viewingDate"
+            :localCal="localCal"
           />
           <Options class="mt-3" />
         </div>
@@ -59,6 +61,7 @@ export default {
       dateArray: [null, null],
       viewingDate: null,
       dateSelect: null,
+      localCal: null,
     };
   },
   methods: {
@@ -103,6 +106,9 @@ export default {
     },
     dateClicked(dateObject) {
       this.dateSelect = dateObject;
+    },
+    updateLocalCal(calendarMap) {
+      this.localCal = calendarMap;
     },
   },
 };

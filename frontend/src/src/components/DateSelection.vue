@@ -20,6 +20,11 @@
             <h3 class="text-center">No dates selected</h3>
             <p class="text-center">Select a date from the calendar</p>
           </div>
+          <div v-if="dateObject1 && !dateObject2" class="date-info">
+            <div v-if="dateObject1.isEvent">
+              {{ dateObject1.eventName }}
+            </div>
+          </div>
           <div v-if="dateObject1 && dateObject2" class="range-stats">
             <div>Total Hours: {{ calculateRangeInHours() }}</div>
             <div>Total Days: {{ calculateRangeInDays() }}</div>
@@ -119,6 +124,10 @@ export default {
 
       .middle-content {
         margin: 0px;
+
+        .date-info {
+          margin-left: 0px;
+        }
 
         .range-stats {
           font-size: 1rem;

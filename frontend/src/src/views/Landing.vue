@@ -1,77 +1,84 @@
 <template>
-  <div class="landing-view">
-    <div class="container">
-      <div class="main">
-        <div class="hero d-flex flex-column">
-          <div class="my-auto">
-            <div class="row">
-              <div class="col-lg-4 text-lg-center">
-                <h1 class="fadeInBottom">
-                  Save a <span class="fadeDate">date</span>
+  <keep-alive>
+    <div class="landing-view">
+      <div class="container">
+        <div class="main">
+          <div class="hero d-flex flex-column">
+            <div class="my-auto">
+              <div class="row">
+                <div class="col-lg-4 text-lg-center">
+                  <h1 class="fadeInBottom">
+                    Save a <span class="fadeDate">date</span>
+                  </h1>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col text-center">
+                  <h1 class="fadeInBottom fadeInSecond">
+                    Make some <span class="fadeTime">time</span>
+                  </h1>
+                </div>
+              </div>
+              <div class="row justify-content-end">
+                <div class="col-lg-4 text-end text-lg-center">
+                  <h1 class="fadeInBottom fadeInThird">
+                    <span class="fadeCall">Call</span> it later
+                  </h1>
+                </div>
+              </div>
+              <div class="row logo-pic-row mt-4 mb-4">
+                <div class="col text-center">
+                  <img
+                    class="fadeInBottomIconThird w-75"
+                    src="@/assets/phone.svg"
+                  />
+                </div>
+                <div class="col text-center">
+                  <img class="fadeInBottomIcon" src="@/assets/cal.svg" />
+                </div>
+                <div class="col text-center">
+                  <img
+                    class="fadeInBottomIconSecond"
+                    src="@/assets/clock.svg"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <h1 class="text-center fadeInBottomLogoString">
+                  <span id="call-string">call</span>
+                  <span id="datetime-string">datetime</span>()
                 </h1>
+                <h4 class="text-center fadeInBottomDescription">
+                  Build, query, trigger actions and calculate time on custom
+                  calendars using the
+                  <span id="restful-string">RESTful</span> API.
+                </h4>
+                <h4 class="text-center fadeInBottomOpenSource mt-1 mb-2">
+                  <span
+                    id="opensource-string"
+                    style="text-decoration: underline"
+                    >All</span
+                  >
+                  opensource
+                </h4>
               </div>
-            </div>
-            <div class="row">
-              <div class="col text-center">
-                <h1 class="fadeInBottom fadeInSecond">
-                  Make some <span class="fadeTime">time</span>
-                </h1>
-              </div>
-            </div>
-            <div class="row justify-content-end">
-              <div class="col-lg-4 text-end text-lg-center">
-                <h1 class="fadeInBottom fadeInThird">
-                  <span class="fadeCall">Call</span> it later
-                </h1>
-              </div>
-            </div>
-            <div class="row logo-pic-row mt-4 mb-4">
-              <div class="col text-center">
-                <img
-                  class="fadeInBottomIconThird w-75"
-                  src="@/assets/phone.svg"
-                />
-              </div>
-              <div class="col text-center">
-                <img class="fadeInBottomIcon" src="@/assets/cal.svg" />
-              </div>
-              <div class="col text-center">
-                <img class="fadeInBottomIconSecond" src="@/assets/clock.svg" />
-              </div>
-            </div>
-            <div class="row">
-              <h1 class="text-center fadeInBottomLogoString">
-                <span id="call-string">call</span>
-                <span id="datetime-string">datetime</span>()
-              </h1>
-              <h4 class="text-center fadeInBottomDescription">
-                Build, query, trigger actions and calculate time on custom
-                calendars using the
-                <span id="restful-string">RESTful</span> API.
-              </h4>
-              <h4 class="text-center fadeInBottomOpenSource mt-1 mb-2">
-                <span id="opensource-string" style="text-decoration: underline"
-                  >All</span
-                >
-                opensource
-              </h4>
-            </div>
-            <div class="row fadeInBottomButtons">
-              <div class="col-md-4">
-                <LinkBtn text="Learn More" />
-              </div>
-              <div class="col-md-4">
-                <LinkBtn text="View Feature List" />
-              </div>
-              <div class="col-md-4">
-                <LinkBtn text="Calculate Working Hours" />
+              <div class="row fadeInBottomButtons">
+                <div class="col-md-4">
+                  <LinkBtn text="Learn More" />
+                </div>
+                <div class="col-md-4">
+                  <LinkBtn text="View Feature List" />
+                </div>
+                <div class="col-md-4">
+                  <LinkBtn text="Calculate Working Hours" />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </keep-alive>
 </template>
 <script>
 import LinkBtn from "../components/LinkBtn.vue";
