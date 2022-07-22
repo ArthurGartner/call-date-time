@@ -92,6 +92,8 @@ html {
   --cal-selected-bottom: #000;
   --cal-event: #aeaeb2;
   --cal-holiday: #007aff;
+  --primary-blue: #007aff;
+  --primary-purple: #af52de;
 }
 
 /* Define styles for the root window with dark - mode preference */
@@ -110,13 +112,15 @@ html {
   --cal-selected-bottom: rgb(207, 207, 207);
   --cal-event: #636366;
   --cal-holiday: #0a84ff;
+  --primary-blue: #0a84ff;
+  --primary-purple: #bf5af2;
 }
 
 .screen-area {
   background: var(--background-color-primary);
 }
 .page-view {
-  padding-top: 55px;
+  padding-top: 90px;
   height: 100vh;
 }
 </style>
