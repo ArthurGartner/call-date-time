@@ -2,7 +2,7 @@
   <router-link :to="link">
     <div class="nav-link-container">
       <div class="content">
-        <h2 id="link-name">{{ name }}</h2>
+        <h4 id="link-name">{{ name }}</h4>
         <div class="selection selected"></div>
       </div>
     </div>
@@ -40,7 +40,6 @@ a {
 }
 .nav-link-container {
   position: relative;
-  margin-right: 20px;
   text-decoration: none;
   cursor: pointer;
   .content {

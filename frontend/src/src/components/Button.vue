@@ -1,7 +1,7 @@
 <template>
-  <div :class="[color, 'btn-container']">
-    <div v-if="size == 'medium'">
-      <h5 class="medium">{{ text }}</h5>
+  <div :class="[size, color, 'btn-container']">
+    <div :class="size">
+      {{ text }}
     </div>
   </div>
 </template>
@@ -19,8 +19,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .btn-container {
-  margin-left: 10px;
-  border-radius: 8px;
   color: white;
   transition: all 0.1s linear;
   cursor: pointer;
@@ -29,8 +27,13 @@ export default {
   }
   .medium {
     margin: 0px;
-    padding: 5px;
+    padding: 2px;
   }
+}
+
+.medium {
+  margin-left: 10px;
+  border-radius: 5px;
 }
 
 .blue {
