@@ -1,7 +1,7 @@
 <template>
   <router-link :to="link">
     <div class="nav-link-container">
-      <div class="content">
+      <div :class="[color, 'content']">
         <h4 id="link-name">{{ name }}</h4>
         <div class="selection selected"></div>
       </div>
@@ -14,6 +14,7 @@ export default {
   props: {
     name: String,
     link: String,
+    color: String,
   },
 };
 </script>
@@ -68,5 +69,13 @@ a {
       transition: width 0.2s linear;
     }
   }
+}
+
+.blue {
+  color: var(--primary-blue);
+}
+
+.purple {
+  color: var(--primary-purple);
 }
 </style>

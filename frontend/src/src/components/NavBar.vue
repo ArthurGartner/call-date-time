@@ -42,14 +42,27 @@ export default {
       classToggle();
     }
 
+    const nav = document.querySelector(".nav-link-list");
+    const menuIcon = document.querySelector(".menu-btn-icon");
     const navLinks = document.querySelectorAll(".nav-link");
     navLinks.forEach((nav) => nav.addEventListener("click", closeMenu));
 
     document.querySelector(".ham-menu").addEventListener("click", classToggle);
+
+    //Close nav menu on click outside menu and toggle button
+    document.addEventListener("click", function (event) {
+      if (
+        nav.classList.contains("nav-show") &&
+        !event.target.isEqualNode(nav) &&
+        !event.target.isEqualNode(menuIcon)
+      ) {
+        closeMenu();
+      }
+    });
   },
 };
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 @media (min-width: 768px) {
   .nav-container {
     .container {

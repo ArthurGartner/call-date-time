@@ -120,7 +120,7 @@ html {
   background: var(--background-color-primary);
 }
 .page-view {
-  padding-top: 90px;
+  padding-top: 55px;
   height: 100vh;
 }
 </style>

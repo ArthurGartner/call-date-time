@@ -1,8 +1,8 @@
 <template>
   <div class="working-hours-public-view">
-    <div class="header d-flex justify-content-between">
+    <div class="header d-flex">
+      <i class="bi bi-calculator"></i>
       <h2>Working Time</h2>
-      <i class="bi bi-gear-fill"></i>
     </div>
     <hr />
     <div class="info-section">
@@ -310,19 +310,15 @@ export default {
 .working-hours-public-view {
   .header {
     h2 {
+      padding-top: 3px;
       color: var(--text-primary-color);
     }
     i {
+      margin-right: 5px;
       font-size: 1.5rem;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.25s;
-
-      @media (hover: hover) {
-        &:hover {
-          color: var(--text-primary-color);
-        }
-      }
     }
   }
   hr {
