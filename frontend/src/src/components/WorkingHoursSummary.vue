@@ -88,85 +88,90 @@ export default {
       };
     },
     updateStats() {
-      //If neither date objects exist then viewing date is used
-      if (!this.dateObject1 && !this.dateObject2) {
-        const workingHoursInDay = 8;
-        this.dayStats = null;
-        this.hourStats = null;
-        this.holidayStats = null;
-        this.holidayHourStats = null;
-        let newDayStats = [];
-        let newHourStats = [];
-        let newHolidayStats = [];
-        let newHolidayHourStats = [];
-
-        newDayStats.push(
-          this.convertStatsObject(
-            "Month Total:",
-            "",
-            workingHours.getWorkingDaysInMonth(
-              this.viewingDate ? this.viewingDate : { date: new Date() }
+      const workingHoursInDay = 8;
+      this.dayStats = null;
+      this.hourStats = null;
+      this.holidayStats = null;
+      this.holidayHourStats = null;
+      let newDayStats = [];
+      let newHourStats = [];
+      let newHolidayStats = [];
+      let newHolidayHourStats = [];
+      if (this.localCal) {
+        //If neither date objects exist then viewing date is used
+        if (!this.dateObject1 && !this.dateObject2) {
+          newDayStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              "Not including holidays",
+              workingHours.getWorkingDaysInMonth(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() }
+              )
             )
-          )
-        );
+          );
 
-        newDayStats.push(
-          this.convertStatsObject(
-            "First Half of Month:",
-            "Days 1 to 15 (inclusive)",
-            workingHours.getWorkingDaysInFirstHalf(
-              this.viewingDate ? this.viewingDate : { date: new Date() }
+          newDayStats.push(
+            this.convertStatsObject(
+              "Month First Half:",
+              "Days 1 to 15 (inclusive)",
+              workingHours.getWorkingDaysInFirstHalf(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() }
+              )
             )
-          )
-        );
+          );
 
-        newDayStats.push(
-          this.convertStatsObject(
-            "Second Half of Month:",
-            `Days 16 to ${workingHours.getTotalDaysInMonth(
-              this.viewingDate ? this.viewingDate : { date: new Date() }
-            )} (inclusive)`,
-            workingHours.getWorkingDaysInSecondHalf(
-              this.viewingDate ? this.viewingDate : { date: new Date() }
+          newDayStats.push(
+            this.convertStatsObject(
+              "Month Second Half:",
+              `Days 16 to ${workingHours.getTotalDaysInMonth(
+                this.viewingDate ? this.viewingDate : { date: new Date() }
+              )} (inclusive)`,
+              workingHours.getWorkingDaysInSecondHalf(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() }
+              )
             )
-          )
-        );
+          );
 
-        newHourStats.push(
-          this.convertStatsObject(
-            "Month Total:",
-            "",
-            workingHours.getWorkingHoursInMonth(
-              this.viewingDate ? this.viewingDate : { date: new Date() },
-              workingHoursInDay
+          newHourStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              "Not including holidays",
+              workingHours.getWorkingHoursInMonth(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() },
+                workingHoursInDay
+              )
             )
-          )
-        );
+          );
 
-        newHourStats.push(
-          this.convertStatsObject(
-            "First Half of Month:",
-            "Days 1 to 15 (inclusive)",
-            workingHours.getWorkingHoursInFirstHalf(
-              this.viewingDate ? this.viewingDate : { date: new Date() },
-              workingHoursInDay
+          newHourStats.push(
+            this.convertStatsObject(
+              "Month First Half:",
+              "Days 1 to 15 (inclusive)",
+              workingHours.getWorkingHoursInFirstHalf(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() },
+                workingHoursInDay
+              )
             )
-          )
-        );
-        newHourStats.push(
-          this.convertStatsObject(
-            "First Half of Month:",
-            `Days 16 to ${workingHours.getTotalDaysInMonth(
-              this.viewingDate ? this.viewingDate : { date: new Date() }
-            )} (inclusive)`,
-            workingHours.getWorkingHoursInSecondHalf(
-              this.viewingDate ? this.viewingDate : { date: new Date() },
-              workingHoursInDay
+          );
+          newHourStats.push(
+            this.convertStatsObject(
+              "Month Second Half:",
+              `Days 16 to ${workingHours.getTotalDaysInMonth(
+                this.viewingDate ? this.viewingDate : { date: new Date() }
+              )} (inclusive)`,
+              workingHours.getWorkingHoursInSecondHalf(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() },
+                workingHoursInDay
+              )
             )
-          )
-        );
+          );
 
-        if (this.localCal) {
           newHolidayStats.push(
             this.convertStatsObject(
               "Month Total:",
@@ -189,13 +194,171 @@ export default {
               )
             )
           );
-        }
+        } else if (this.dateObject1 && !this.dateObject2) {
+          const viewDate = this.viewingDate
+            ? this.viewingDate
+            : { date: new Date() };
+          newDayStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Viewing Month - ${workingHours.getMonthName(
+                viewDate.date.getMonth()
+              )} ${viewDate.date.getFullYear()}`,
+              workingHours.getWorkingDaysInMonth(this.localCal, viewDate)
+            )
+          );
 
-        this.dayStats = newDayStats;
-        this.hourStats = newHourStats;
-        this.holidayStats = newHolidayStats;
-        this.holidayHourStats = newHolidayHourStats;
+          newDayStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Selected Month - ${workingHours.getMonthName(
+                this.dateObject1.date.getMonth()
+              )} ${this.dateObject1.date.getFullYear()}`,
+              workingHours.getWorkingDaysInMonth(
+                this.localCal,
+                this.dateObject1
+              )
+            )
+          );
+
+          newDayStats.push(
+            this.convertStatsObject(
+              "Rest of Month:",
+              `Days ${this.dateObject1.date.getDate()} to ${workingHours.getTotalDaysInMonth(
+                this.dateObject1
+              )} (inclusive)`,
+              workingHours.getWorkingDaysInRestOfMonth(
+                this.localCal,
+                this.dateObject1
+              )
+            )
+          );
+
+          newHourStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Viewing Month - ${workingHours.getMonthName(
+                viewDate.date.getMonth()
+              )} ${viewDate.date.getFullYear()}`,
+              workingHours.getWorkingHoursInMonth(
+                this.localCal,
+                viewDate,
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHourStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Selected Month - ${workingHours.getMonthName(
+                this.dateObject1.date.getMonth()
+              )} ${this.dateObject1.date.getFullYear()}`,
+              workingHours.getWorkingHoursInMonth(
+                this.localCal,
+                this.dateObject1,
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHourStats.push(
+            this.convertStatsObject(
+              "Rest of Month:",
+              `Days ${this.dateObject1.date.getDate()} to ${workingHours.getTotalDaysInMonth(
+                this.dateObject1
+              )} (inclusive)`,
+              workingHours.getWorkingHoursInRestOfMonth(
+                this.localCal,
+                this.dateObject1,
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHolidayStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Viewing Month - ${workingHours.getMonthName(
+                viewDate.date.getMonth()
+              )} ${viewDate.date.getFullYear()}`,
+              workingHours.getNumOfHolidaysInMonth(this.localCal, viewDate)
+            )
+          );
+
+          newHolidayStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Selected Month - ${workingHours.getMonthName(
+                this.dateObject1.date.getMonth()
+              )} ${this.dateObject1.date.getFullYear()}`,
+              workingHours.getNumOfHolidaysInMonth(
+                this.localCal,
+                this.dateObject1
+              )
+            )
+          );
+
+          newHolidayStats.push(
+            this.convertStatsObject(
+              "Rest of Month:",
+              `Days ${this.dateObject1.date.getDate()} to ${workingHours.getTotalDaysInMonth(
+                this.dateObject1
+              )} (inclusive)`,
+              workingHours.getNumOfHolidaysInRestOfMonth(
+                this.localCal,
+                this.dateObject1
+              )
+            )
+          );
+
+          newHolidayHourStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Viewing Month - ${workingHours.getMonthName(
+                viewDate.date.getMonth()
+              )} ${viewDate.date.getFullYear()}`,
+              workingHours.getNumOfHolidayHoursInMonth(
+                this.localCal,
+                viewDate,
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHolidayHourStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Selected Month - ${workingHours.getMonthName(
+                this.dateObject1.date.getMonth()
+              )} ${this.dateObject1.date.getFullYear()}`,
+              workingHours.getNumOfHolidayHoursInMonth(
+                this.localCal,
+                this.dateObject1,
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHolidayHourStats.push(
+            this.convertStatsObject(
+              "Rest of Month:",
+              `Days ${this.dateObject1.date.getDate()} to ${workingHours.getTotalDaysInMonth(
+                this.dateObject1
+              )} (inclusive)`,
+              workingHours.getHolidayHoursOfRestOfMonth(
+                this.localCal,
+                this.dateObject1,
+                workingHoursInDay
+              )
+            )
+          );
+        }
       }
+      this.dayStats = newDayStats;
+      this.hourStats = newHourStats;
+      this.holidayStats = newHolidayStats;
+      this.holidayHourStats = newHolidayHourStats;
     },
     isDateHoliday(date) {
       if (this.localCal.has(date.toISOString().substring(0, 10))) {
