@@ -101,6 +101,7 @@ export default {
 
       return 0;
     },
+    //Handles what month is currently in view
     newMonth(monthData) {
       this.viewingDate = monthData;
     },

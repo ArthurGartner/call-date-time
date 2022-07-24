@@ -1,10 +1,17 @@
 <template>
   <div class="title-group">
     <div class="title">
-      <h1>{{ title }}</h1>
+      <div class="title-text">
+        {{ title }}
+      </div>
+      <div class="page-link d-md-none">
+        <a href="#calendar-options">
+          <i class="bi bi-gear-fill"></i>
+        </a>
+      </div>
     </div>
     <div class="subtitle">
-      <p class="mb-1">{{ subtitle }}</p>
+      {{ subtitle }}
     </div>
   </div>
 </template>
@@ -23,16 +30,57 @@ export default {
   color: var(--text-primary-color);
 
   .title {
-    h1 {
-      margin: 0px;
+    .title-text {
+      font-size: 2rem;
+      font-weight: 600;
     }
   }
   .subtitle {
     color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: -10px;
+    margin-bottom: 5px;
+  }
+}
 
-    p {
-      font-size: 0.9rem;
-      margin: 0px;
+a:link {
+  text-decoration: underline;
+}
+a:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 767px) {
+  .title-group {
+    padding-top: 5px;
+    color: var(--text-primary-color);
+
+    .title {
+      display: flex;
+      justify-content: space-between;
+      .title-text {
+        font-size: 2rem;
+        font-weight: 600;
+      }
+
+      .page-link {
+        font-size: 2rem;
+        padding: 0px;
+        margin: 0px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+
+        i {
+          color: var(--primary-blue);
+          @media (hover: hover) {
+            &:hover {
+              color: var(--text-primary-color);
+            }
+          }
+        }
+      }
     }
   }
 }

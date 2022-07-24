@@ -1,7 +1,8 @@
 <template>
   <div class="calendar">
-    <div class="cal-nav text-start">
+    <div class="cal-nav">
       <h2 class="d-inline-block">{{ selectedYear }}</h2>
+      <CalViewToggle :items="['Monthly', 'Yearly']" />
     </div>
     <div class="main-cal-view">
       <div class="cal-header text-center">
@@ -102,10 +103,12 @@
 <script>
 import CalBtn from "./CalBtn.vue";
 import { localWorkingCalInit } from "@/logic/calendar";
+import CalViewToggle from "./CalViewToggle.vue";
 export default {
   name: "Calendar-Component",
   components: {
     CalBtn,
+    CalViewToggle,
   },
   beforeMount() {
     //Load variable with localCal Map
@@ -320,7 +323,10 @@ export default {
 
       //Create temp date object to send to hour summary to indicate current month view
       let newDate = new Date(this.selectedYear, this.selectedMonth, 1);
-      this.$emit("new-month", newDate);
+      let newDateObject = {
+        date: newDate,
+      };
+      this.$emit("new-month", newDateObject);
       this.updateDateArray(this.selectedMonth, this.selectedYear);
     },
     //Decrements instance of month. Does not need parameters.
@@ -375,6 +381,13 @@ export default {
 
 .calendar {
   width: 100%;
+  .cal-nav {
+    display: flex;
+    justify-content: space-between;
+    h2 {
+      font-weight: 500;
+    }
+  }
   .main-cal-view {
     position: relative;
     height: 300px;

@@ -14,12 +14,7 @@ export default {
 <style lang="scss" scoped>
 .link-btn-container {
   width: 100%;
-  background: rgb(76, 162, 255);
-  background: linear-gradient(
-    180deg,
-    rgba(76, 162, 255, 1) 0%,
-    rgba(25, 100, 176, 1) 100%
-  );
+  background: #0a84ff;
   border-radius: 25px;
   color: #fff;
 }

@@ -1,9 +1,10 @@
 <template>
-  <div class="working-hours-options">
-    <div class="header">
+  <div id="calendar-options" class="working-hours-options">
+    <div class="header d-flex">
+      <i class="bi bi-gear-fill"></i>
       <h2>Options</h2>
-      <hr />
     </div>
+    <hr />
   </div>
 </template>
 <script>
@@ -16,15 +17,23 @@ export default {
   height: 300px;
   .header {
     h2 {
+      padding-top: 3px;
       color: var(--text-primary-color);
     }
-    hr {
-      width: 100%;
-      margin-top: -5px;
-      height: 2px;
-      background-color: gray;
-      opacity: 0.5;
+    i {
+      margin-right: 5px;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.25s;
     }
+  }
+  hr {
+    width: 100%;
+    margin-top: -5px;
+    height: 2px;
+    background-color: gray;
+    opacity: 0.5;
   }
 }
 </style>

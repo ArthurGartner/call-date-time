@@ -1,76 +1,365 @@
 <template>
   <div class="working-hours-public-view">
-    <div class="header d-flex justify-content-between">
+    <div class="header d-flex">
+      <i class="bi bi-calculator"></i>
       <h2>Working Time</h2>
-      <i class="bi bi-gear-fill"></i>
     </div>
     <hr />
-    <div class="info-section">
-      <div v-if="dateObject1 && dateObject2">
-        Hours in range: {{ getWorkingHoursInRange() }} hours
+    <div class="calc-section">
+      <div class="row">
+        <div class="col">
+          <TimeCalcSummary
+            icon="bi bi-clock-fill"
+            title="Hours"
+            :stats="hourStats"
+          />
+        </div>
+        <div class="col">
+          <TimeCalcSummary
+            icon="bi bi-brightness-alt-high-fill"
+            title="Days"
+            :stats="dayStats"
+          />
+        </div>
       </div>
-      <div v-if="!dateObject1 && !dateObject2">
-        Hours in month: {{ getWorkingHoursInMonth() }} hours
-      </div>
-      <div v-if="!dateObject1 && !dateObject2">
-        Hours in days 1 to 15: {{ getWorkingHoursInFirstHalf() }} hours
-      </div>
-      <div v-if="!dateObject1 && !dateObject2">
-        Hours in days 16 to {{ getDaysInMonth() }}:
-        {{ getWorkingHoursInSecondHalf() }} hours
-      </div>
-      <div v-if="dateObject1 && !dateObject2">
-        Hours until end of month: {{ getWorkingHoursUntilEndOfMonth() }} hours
-      </div>
-      <div v-if="dateObject1 && !dateObject2">
-        Days until end of month: {{ getWorkingDaysUntilEndOfMonth() }} days
-      </div>
-      <div v-if="dateObject1 && !dateObject2">
-        Holidays before end of month: {{ getHolidaysUntilEndOfMonth() }} days
-      </div>
-      <div v-if="dateObject1 && !dateObject2">
-        Holiday hours before end of month:
-        {{ getHolidayHoursUntilEndfOfMonth() }} days
-      </div>
-      <div v-if="dateObject1 && dateObject2">
-        Days in range: {{ getWorkingDaysInRange() }} days
-      </div>
-      <div v-if="dateObject1 && dateObject2">
-        Holidays in range: {{ getHolidaysInRange() }} days
-      </div>
-      <div v-if="dateObject1 && dateObject2">
-        Holiday hours in range: {{ getHolidayHoursInRange() }} hours
-      </div>
-      <div v-if="!dateObject1 && !dateObject2">
-        Days in month: {{ getWorkingDaysInMonth() }} days
-      </div>
-      <div v-if="!dateObject1 && !dateObject2">
-        Days in days 1 to 15: {{ getWorkingDaysInFirstHalf() }} days
-      </div>
-      <div v-if="!dateObject1 && !dateObject2">
-        Days in days 16 to {{ getDaysInMonth() }}:
-        {{ getWorkingDaysInSecondHalf() }} days
-      </div>
-      <div v-if="!dateObject1 && !dateObject2">
-        Holidays in month: {{ getHolidaysInMonth() }} days
-      </div>
-      <div v-if="!dateObject1 && !dateObject2">
-        Holiday Hours in month: {{ getHolidayHoursInMonth() }} hours
+      <div class="row mt-2">
+        <div class="col-6">
+          <TimeCalcSummary :stats="holidayHourStats" />
+        </div>
+        <div class="col-6">
+          <TimeCalcSummary
+            icon="fa-solid fa-umbrella-beach"
+            title="Holidays"
+            :stats="holidayStats"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import TimeCalcSummary from "./TimeCalcSummary.vue";
+const workingHours = require("../logic/workingHours");
 export default {
   name: "Working-Hours-Public-View",
+  components: {
+    TimeCalcSummary,
+  },
   props: {
     dateObject1: Object,
     dateObject2: Object,
     viewingDate: Object,
     localCal: Object,
   },
+  watch: {
+    //Viewing date represents the current month that is being viewed.
+    //Used to pull stats when there is no selection made.
+    viewingDate: function () {
+      this.updateStats();
+    },
+    dateObject1: function () {
+      this.updateStats();
+    },
+    dateObject2: function () {
+      this.updateStats();
+    },
+    localCal: function () {
+      this.updateStats();
+    },
+  },
+  data() {
+    return {
+      hourStats: null,
+      dayStats: null,
+      holidayStats: null,
+      holidayHourStats: null,
+    };
+  },
+  mounted() {
+    this.updateStats();
+  },
   //Methods should be refractored into single js file.
   methods: {
+    convertStatsObject(label, sublabel, value) {
+      return {
+        label: label,
+        sublabel: sublabel,
+        value: value,
+      };
+    },
+    updateStats() {
+      const workingHoursInDay = 8;
+      this.dayStats = null;
+      this.hourStats = null;
+      this.holidayStats = null;
+      this.holidayHourStats = null;
+      let newDayStats = [];
+      let newHourStats = [];
+      let newHolidayStats = [];
+      let newHolidayHourStats = [];
+      if (this.localCal) {
+        //If neither date objects exist then viewing date is used
+        if (!this.dateObject1 && !this.dateObject2) {
+          newDayStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              "Not including holidays",
+              workingHours.getWorkingDaysInMonth(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() }
+              )
+            )
+          );
+
+          newDayStats.push(
+            this.convertStatsObject(
+              "Month First Half:",
+              "Days 1 to 15 (inclusive)",
+              workingHours.getWorkingDaysInFirstHalf(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() }
+              )
+            )
+          );
+
+          newDayStats.push(
+            this.convertStatsObject(
+              "Month Second Half:",
+              `Days 16 to ${workingHours.getTotalDaysInMonth(
+                this.viewingDate ? this.viewingDate : { date: new Date() }
+              )} (inclusive)`,
+              workingHours.getWorkingDaysInSecondHalf(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() }
+              )
+            )
+          );
+
+          newHourStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              "Not including holidays",
+              workingHours.getWorkingHoursInMonth(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() },
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHourStats.push(
+            this.convertStatsObject(
+              "Month First Half:",
+              "Days 1 to 15 (inclusive)",
+              workingHours.getWorkingHoursInFirstHalf(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() },
+                workingHoursInDay
+              )
+            )
+          );
+          newHourStats.push(
+            this.convertStatsObject(
+              "Month Second Half:",
+              `Days 16 to ${workingHours.getTotalDaysInMonth(
+                this.viewingDate ? this.viewingDate : { date: new Date() }
+              )} (inclusive)`,
+              workingHours.getWorkingHoursInSecondHalf(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() },
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHolidayStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              "",
+              workingHours.getNumOfHolidaysInMonth(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() }
+              )
+            )
+          );
+
+          newHolidayHourStats.push(
+            this.convertStatsObject(
+              "Month Holiday Total:",
+              "",
+              workingHours.getNumOfHolidayHoursInMonth(
+                this.localCal,
+                this.viewingDate ? this.viewingDate : { date: new Date() },
+                workingHoursInDay
+              )
+            )
+          );
+        } else if (this.dateObject1 && !this.dateObject2) {
+          const viewDate = this.viewingDate
+            ? this.viewingDate
+            : { date: new Date() };
+          newDayStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Viewing Month - ${workingHours.getMonthName(
+                viewDate.date.getMonth()
+              )} ${viewDate.date.getFullYear()}`,
+              workingHours.getWorkingDaysInMonth(this.localCal, viewDate)
+            )
+          );
+
+          newDayStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Selected Month - ${workingHours.getMonthName(
+                this.dateObject1.date.getMonth()
+              )} ${this.dateObject1.date.getFullYear()}`,
+              workingHours.getWorkingDaysInMonth(
+                this.localCal,
+                this.dateObject1
+              )
+            )
+          );
+
+          newDayStats.push(
+            this.convertStatsObject(
+              "Rest of Month:",
+              `Days ${this.dateObject1.date.getDate()} to ${workingHours.getTotalDaysInMonth(
+                this.dateObject1
+              )} (inclusive)`,
+              workingHours.getWorkingDaysInRestOfMonth(
+                this.localCal,
+                this.dateObject1
+              )
+            )
+          );
+
+          newHourStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Viewing Month - ${workingHours.getMonthName(
+                viewDate.date.getMonth()
+              )} ${viewDate.date.getFullYear()}`,
+              workingHours.getWorkingHoursInMonth(
+                this.localCal,
+                viewDate,
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHourStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Selected Month - ${workingHours.getMonthName(
+                this.dateObject1.date.getMonth()
+              )} ${this.dateObject1.date.getFullYear()}`,
+              workingHours.getWorkingHoursInMonth(
+                this.localCal,
+                this.dateObject1,
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHourStats.push(
+            this.convertStatsObject(
+              "Rest of Month:",
+              `Days ${this.dateObject1.date.getDate()} to ${workingHours.getTotalDaysInMonth(
+                this.dateObject1
+              )} (inclusive)`,
+              workingHours.getWorkingHoursInRestOfMonth(
+                this.localCal,
+                this.dateObject1,
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHolidayStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Viewing Month - ${workingHours.getMonthName(
+                viewDate.date.getMonth()
+              )} ${viewDate.date.getFullYear()}`,
+              workingHours.getNumOfHolidaysInMonth(this.localCal, viewDate)
+            )
+          );
+
+          newHolidayStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Selected Month - ${workingHours.getMonthName(
+                this.dateObject1.date.getMonth()
+              )} ${this.dateObject1.date.getFullYear()}`,
+              workingHours.getNumOfHolidaysInMonth(
+                this.localCal,
+                this.dateObject1
+              )
+            )
+          );
+
+          newHolidayStats.push(
+            this.convertStatsObject(
+              "Rest of Month:",
+              `Days ${this.dateObject1.date.getDate()} to ${workingHours.getTotalDaysInMonth(
+                this.dateObject1
+              )} (inclusive)`,
+              workingHours.getNumOfHolidaysInRestOfMonth(
+                this.localCal,
+                this.dateObject1
+              )
+            )
+          );
+
+          newHolidayHourStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Viewing Month - ${workingHours.getMonthName(
+                viewDate.date.getMonth()
+              )} ${viewDate.date.getFullYear()}`,
+              workingHours.getNumOfHolidayHoursInMonth(
+                this.localCal,
+                viewDate,
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHolidayHourStats.push(
+            this.convertStatsObject(
+              "Month Total:",
+              `Selected Month - ${workingHours.getMonthName(
+                this.dateObject1.date.getMonth()
+              )} ${this.dateObject1.date.getFullYear()}`,
+              workingHours.getNumOfHolidayHoursInMonth(
+                this.localCal,
+                this.dateObject1,
+                workingHoursInDay
+              )
+            )
+          );
+
+          newHolidayHourStats.push(
+            this.convertStatsObject(
+              "Rest of Month:",
+              `Days ${this.dateObject1.date.getDate()} to ${workingHours.getTotalDaysInMonth(
+                this.dateObject1
+              )} (inclusive)`,
+              workingHours.getHolidayHoursOfRestOfMonth(
+                this.localCal,
+                this.dateObject1,
+                workingHoursInDay
+              )
+            )
+          );
+        }
+      }
+      this.dayStats = newDayStats;
+      this.hourStats = newHourStats;
+      this.holidayStats = newHolidayStats;
+      this.holidayHourStats = newHolidayHourStats;
+    },
     isDateHoliday(date) {
       if (this.localCal.has(date.toISOString().substring(0, 10))) {
         if (this.localCal.get(date.toISOString().substring(0, 10)).isHoliday) {
@@ -310,24 +599,21 @@ export default {
 .working-hours-public-view {
   .header {
     h2 {
+      padding-top: 3px;
       color: var(--text-primary-color);
     }
     i {
+      margin-right: 5px;
       font-size: 1.5rem;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.25s;
-
-      @media (hover: hover) {
-        &:hover {
-          color: var(--text-primary-color);
-        }
-      }
     }
   }
   hr {
     width: 100%;
     margin-top: -5px;
+    margin-bottom: 5px;
     height: 2px;
     background-color: gray;
     opacity: 0.5;
