@@ -114,6 +114,7 @@ html {
   --cal-holiday: #0a84ff;
   --primary-blue: #0a84ff;
   --primary-purple: #bf5af2;
+  --primary-teal: #40c8e0;
 }
 
 .screen-area {

@@ -70,11 +70,10 @@ a:hover {
         margin: 0px;
         background: transparent;
         border: none;
-        color: var(--text-muted);
         cursor: pointer;
 
         i {
-          color: var(--text-muted);
+          color: var(--primary-blue);
           @media (hover: hover) {
             &:hover {
               color: var(--text-primary-color);

@@ -323,7 +323,10 @@ export default {
 
       //Create temp date object to send to hour summary to indicate current month view
       let newDate = new Date(this.selectedYear, this.selectedMonth, 1);
-      this.$emit("new-month", newDate);
+      let newDateObject = {
+        date: newDate,
+      };
+      this.$emit("new-month", newDateObject);
       this.updateDateArray(this.selectedMonth, this.selectedYear);
     },
     //Decrements instance of month. Does not need parameters.
