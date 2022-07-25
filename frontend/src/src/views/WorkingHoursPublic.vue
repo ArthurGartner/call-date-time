@@ -33,7 +33,6 @@
             :viewingDate="viewingDate"
             :localCal="localCal"
           />
-          <Options class="mt-3" />
         </div>
       </div>
     </div>
@@ -44,7 +43,6 @@ import Calendar from "../components/Calendar.vue";
 import PageHeader from "../components/PageHeader.vue";
 import DateSelection from "../components/DateSelection.vue";
 import WorkingHours from "../components/WorkingHoursSummary.vue";
-import Options from "../components/WorkingHoursOptions.vue";
 export default {
   name: "WorkingHoursPublic-Page",
   components: {
@@ -52,7 +50,6 @@ export default {
     PageHeader,
     DateSelection,
     WorkingHours,
-    Options,
   },
   data() {
     return {

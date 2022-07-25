@@ -1,7 +1,11 @@
 <template>
   <div class="working-hours-public-view">
     <div class="header d-flex">
-      <i class="bi bi-calculator"></i>
+      <div class="icon-container">
+        <h2>
+          <i class="bi bi-calculator"></i>
+        </h2>
+      </div>
       <h2>Working Time</h2>
     </div>
     <hr />
@@ -9,29 +13,29 @@
       <div class="row">
         <div class="col">
           <TimeCalcSummary
-            icon="bi bi-clock-fill"
-            title="Hours"
-            :stats="hourStats"
-          />
-        </div>
-        <div class="col">
-          <TimeCalcSummary
             icon="bi bi-brightness-alt-high-fill"
             title="Days"
             :stats="dayStats"
           />
         </div>
+        <div class="col">
+          <TimeCalcSummary
+            icon="bi bi-clock-fill"
+            title="Hours"
+            :stats="hourStats"
+          />
+        </div>
       </div>
       <div class="row mt-2">
-        <div class="col-6">
-          <TimeCalcSummary :stats="holidayHourStats" />
-        </div>
         <div class="col-6">
           <TimeCalcSummary
             icon="fa-solid fa-umbrella-beach"
             title="Holidays"
             :stats="holidayStats"
           />
+        </div>
+        <div class="col-6">
+          <TimeCalcSummary :stats="holidayHourStats" />
         </div>
       </div>
     </div>
@@ -80,11 +84,12 @@ export default {
   },
   //Methods should be refractored into single js file.
   methods: {
-    convertStatsObject(label, sublabel, value) {
+    convertStatsObject(label, sublabel, value, type) {
       return {
         label: label,
         sublabel: sublabel,
         value: value,
+        type: type,
       };
     },
     updateStats() {
@@ -103,11 +108,12 @@ export default {
           newDayStats.push(
             this.convertStatsObject(
               "Month Total:",
-              "Not including holidays",
+              "Includes holidays",
               workingHours.getWorkingDaysInMonth(
                 this.localCal,
                 this.viewingDate ? this.viewingDate : { date: new Date() }
-              )
+              ),
+              "total"
             )
           );
 
@@ -118,7 +124,8 @@ export default {
               workingHours.getWorkingDaysInFirstHalf(
                 this.localCal,
                 this.viewingDate ? this.viewingDate : { date: new Date() }
-              )
+              ),
+              ""
             )
           );
 
@@ -131,19 +138,21 @@ export default {
               workingHours.getWorkingDaysInSecondHalf(
                 this.localCal,
                 this.viewingDate ? this.viewingDate : { date: new Date() }
-              )
+              ),
+              ""
             )
           );
 
           newHourStats.push(
             this.convertStatsObject(
               "Month Total:",
-              "Not including holidays",
+              "Includes holidays",
               workingHours.getWorkingHoursInMonth(
                 this.localCal,
                 this.viewingDate ? this.viewingDate : { date: new Date() },
                 workingHoursInDay
-              )
+              ),
+              "total"
             )
           );
 
@@ -155,7 +164,8 @@ export default {
                 this.localCal,
                 this.viewingDate ? this.viewingDate : { date: new Date() },
                 workingHoursInDay
-              )
+              ),
+              ""
             )
           );
           newHourStats.push(
@@ -168,7 +178,8 @@ export default {
                 this.localCal,
                 this.viewingDate ? this.viewingDate : { date: new Date() },
                 workingHoursInDay
-              )
+              ),
+              ""
             )
           );
 
@@ -179,7 +190,8 @@ export default {
               workingHours.getNumOfHolidaysInMonth(
                 this.localCal,
                 this.viewingDate ? this.viewingDate : { date: new Date() }
-              )
+              ),
+              ""
             )
           );
 
@@ -191,7 +203,8 @@ export default {
                 this.localCal,
                 this.viewingDate ? this.viewingDate : { date: new Date() },
                 workingHoursInDay
-              )
+              ),
+              ""
             )
           );
         } else if (this.dateObject1 && !this.dateObject2) {
@@ -204,7 +217,8 @@ export default {
               `Viewing Month - ${workingHours.getMonthName(
                 viewDate.date.getMonth()
               )} ${viewDate.date.getFullYear()}`,
-              workingHours.getWorkingDaysInMonth(this.localCal, viewDate)
+              workingHours.getWorkingDaysInMonth(this.localCal, viewDate),
+              ""
             )
           );
 
@@ -217,7 +231,8 @@ export default {
               workingHours.getWorkingDaysInMonth(
                 this.localCal,
                 this.dateObject1
-              )
+              ),
+              ""
             )
           );
 
@@ -230,7 +245,8 @@ export default {
               workingHours.getWorkingDaysInRestOfMonth(
                 this.localCal,
                 this.dateObject1
-              )
+              ),
+              ""
             )
           );
 
@@ -244,7 +260,8 @@ export default {
                 this.localCal,
                 viewDate,
                 workingHoursInDay
-              )
+              ),
+              ""
             )
           );
 
@@ -258,7 +275,8 @@ export default {
                 this.localCal,
                 this.dateObject1,
                 workingHoursInDay
-              )
+              ),
+              ""
             )
           );
 
@@ -272,7 +290,8 @@ export default {
                 this.localCal,
                 this.dateObject1,
                 workingHoursInDay
-              )
+              ),
+              ""
             )
           );
 
@@ -282,7 +301,8 @@ export default {
               `Viewing Month - ${workingHours.getMonthName(
                 viewDate.date.getMonth()
               )} ${viewDate.date.getFullYear()}`,
-              workingHours.getNumOfHolidaysInMonth(this.localCal, viewDate)
+              workingHours.getNumOfHolidaysInMonth(this.localCal, viewDate),
+              ""
             )
           );
 
@@ -295,7 +315,8 @@ export default {
               workingHours.getNumOfHolidaysInMonth(
                 this.localCal,
                 this.dateObject1
-              )
+              ),
+              ""
             )
           );
 
@@ -308,7 +329,8 @@ export default {
               workingHours.getNumOfHolidaysInRestOfMonth(
                 this.localCal,
                 this.dateObject1
-              )
+              ),
+              ""
             )
           );
 
@@ -322,7 +344,8 @@ export default {
                 this.localCal,
                 viewDate,
                 workingHoursInDay
-              )
+              ),
+              ""
             )
           );
 
@@ -336,7 +359,8 @@ export default {
                 this.localCal,
                 this.dateObject1,
                 workingHoursInDay
-              )
+              ),
+              ""
             )
           );
 
@@ -350,7 +374,8 @@ export default {
                 this.localCal,
                 this.dateObject1,
                 workingHoursInDay
-              )
+              ),
+              ""
             )
           );
         }
@@ -603,8 +628,10 @@ export default {
       color: var(--text-primary-color);
     }
     i {
+      margin: auto;
       margin-right: 5px;
-      font-size: 1.5rem;
+      margin-bottom: 5px;
+      font-size: 1.6rem;
       color: var(--text-muted);
       cursor: pointer;
       transition: all 0.25s;

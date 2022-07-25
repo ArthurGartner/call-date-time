@@ -10,10 +10,16 @@
       <div :key="stat" v-for="stat in stats">
         <div class="stat-row">
           <div class="labels">
-            <div class="label">{{ stat.label }}</div>
+            <div :class="[stat.type == 'total' ? 'main-total' : '', 'label']">
+              {{ stat.label }}
+            </div>
             <div class="sublabel">{{ stat.sublabel }}</div>
           </div>
-          <div class="stat-val">{{ stat.value }}</div>
+          <div
+            :class="[stat.type == 'total' ? 'main-total' : '', 'stat-values']"
+          >
+            {{ stat.value }}
+          </div>
         </div>
       </div>
     </div>
@@ -59,8 +65,8 @@ export default {
       font-weight: 500;
     }
   }
-  .stat-val {
-    font-weight: 600;
+  .main-total {
+    font-weight: 800;
   }
 }
 

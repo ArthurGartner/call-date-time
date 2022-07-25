@@ -15,7 +15,7 @@ function getWorkingDaysInMonth(localCal, dateObject) {
 
   //Iterate through working days, saturday and sunday are not working days
   for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-    if (d.getDay() != 0 && d.getDay() != 6 && !isDateHoliday(localCal, d)) {
+    if (d.getDay() != 0 && d.getDay() != 6) {
       workingDays++;
     }
   }
@@ -45,7 +45,7 @@ function getWorkingDaysInFirstHalf(localCal, dateObject) {
 
   //Iterate through working days, saturday and sunday are not working days
   for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-    if (d.getDay() != 0 && d.getDay() != 6 && !isDateHoliday(localCal, d)) {
+    if (d.getDay() != 0 && d.getDay() != 6) {
       workingDays++;
     }
   }
@@ -75,7 +75,7 @@ function getWorkingDaysInSecondHalf(localCal, dateObject) {
 
   //Iterate through working days, saturday and sunday are not working days
   for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-    if (d.getDay() != 0 && d.getDay() != 6 && !isDateHoliday(localCal, d)) {
+    if (d.getDay() != 0 && d.getDay() != 6) {
       workingDays++;
     }
   }
@@ -104,7 +104,7 @@ function getWorkingDaysInRestOfMonth(localCal, dateObject) {
 
   //Iterate through working days, saturday and sunday are not working days
   for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-    if (d.getDay() != 0 && d.getDay() != 6 && !isDateHoliday(localCal, d)) {
+    if (d.getDay() != 0 && d.getDay() != 6) {
       workingDays++;
     }
   }
