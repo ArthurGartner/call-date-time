@@ -378,244 +378,66 @@ export default {
               ""
             )
           );
+        } else if (this.dateObject1 && this.dateObject2) {
+          newDayStats.push(
+            this.convertStatsObject(
+              "Range Total:",
+              "Includes holidays",
+              workingHours.getWorkingDaysInRange(
+                this.localCal,
+                this.dateObject1,
+                this.dateObject2
+              ),
+              "total"
+            )
+          );
+
+          newHourStats.push(
+            this.convertStatsObject(
+              "Range Total:",
+              "Includes holidays",
+              workingHours.getWorkingHoursInRange(
+                this.localCal,
+                this.dateObject1,
+                this.dateObject2,
+                workingHoursInDay
+              ),
+              "total"
+            )
+          );
+
+          newHolidayStats.push(
+            this.convertStatsObject(
+              "Range Total:",
+              "",
+              workingHours.getNumOfHolidaysInRange(
+                this.localCal,
+                this.dateObject1,
+                this.dateObject2
+              ),
+              ""
+            )
+          );
+
+          newHolidayHourStats.push(
+            this.convertStatsObject(
+              "Range Total:",
+              "",
+              workingHours.getNumOfHolidayHoursInRange(
+                this.localCal,
+                this.dateObject1,
+                this.dateObject2,
+                workingHoursInDay
+              ),
+              ""
+            )
+          );
         }
       }
       this.dayStats = newDayStats;
       this.hourStats = newHourStats;
       this.holidayStats = newHolidayStats;
       this.holidayHourStats = newHolidayHourStats;
-    },
-    isDateHoliday(date) {
-      if (this.localCal.has(date.toISOString().substring(0, 10))) {
-        if (this.localCal.get(date.toISOString().substring(0, 10)).isHoliday) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    },
-    //Method that returns working days for entire month. If no month has been selected yet then the default month is
-    //the current month as read by the client
-    getWorkingDaysInMonth() {
-      let dateSelected;
-      if (this.viewingDate) {
-        dateSelected = this.viewingDate;
-      } else {
-        dateSelected = new Date();
-      }
-
-      let daysInMonth = this.getDaysInMonth();
-      let startDate = new Date(
-        dateSelected.getFullYear(),
-        dateSelected.getMonth(),
-        1
-      );
-      let endDate = new Date(
-        dateSelected.getFullYear(),
-        dateSelected.getMonth(),
-        daysInMonth
-      );
-
-      let workingDays = 0;
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        if (d.getDay() != 0 && d.getDay() != 6 && !this.isDateHoliday(d)) {
-          workingDays++;
-        }
-      }
-      return workingDays;
-    },
-    getHolidaysInMonth() {
-      let dateSelected;
-      if (this.viewingDate) {
-        dateSelected = this.viewingDate;
-      } else {
-        dateSelected = new Date();
-      }
-
-      let daysInMonth = this.getDaysInMonth();
-      let startDate = new Date(
-        dateSelected.getFullYear(),
-        dateSelected.getMonth(),
-        1
-      );
-      let endDate = new Date(
-        dateSelected.getFullYear(),
-        dateSelected.getMonth(),
-        daysInMonth
-      );
-
-      let holidays = 0;
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        if (d.getDay() != 0 && d.getDay() != 6 && this.isDateHoliday(d)) {
-          holidays++;
-        }
-      }
-      return holidays;
-    },
-    getHolidayHoursInMonth() {
-      return this.getHolidaysInMonth() * 8;
-    },
-    getWorkingDaysInFirstHalf() {
-      let dateSelected;
-      if (this.viewingDate) {
-        dateSelected = this.viewingDate;
-      } else {
-        dateSelected = new Date();
-      }
-
-      let startDate = new Date(
-        dateSelected.getFullYear(),
-        dateSelected.getMonth(),
-        1
-      );
-      let endDate = new Date(
-        dateSelected.getFullYear(),
-        dateSelected.getMonth(),
-        15
-      );
-
-      let workingDays = 0;
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        if (d.getDay() != 0 && d.getDay() != 6 && !this.isDateHoliday(d)) {
-          workingDays++;
-        }
-      }
-      return workingDays;
-    },
-    getWorkingHoursInFirstHalf() {
-      return this.getWorkingDaysInFirstHalf() * 8;
-    },
-    getWorkingDaysInSecondHalf() {
-      let dateSelected;
-      if (this.viewingDate) {
-        dateSelected = this.viewingDate;
-      } else {
-        dateSelected = new Date();
-      }
-
-      let daysInMonth = this.getDaysInMonth();
-      let startDate = new Date(
-        dateSelected.getFullYear(),
-        dateSelected.getMonth(),
-        16
-      );
-      let endDate = new Date(
-        dateSelected.getFullYear(),
-        dateSelected.getMonth(),
-        daysInMonth
-      );
-
-      let workingDays = 0;
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        if (d.getDay() != 0 && d.getDay() != 6 && !this.isDateHoliday(d)) {
-          workingDays++;
-        }
-      }
-      return workingDays;
-    },
-    getWorkingHoursInSecondHalf() {
-      return this.getWorkingDaysInSecondHalf() * 8;
-    },
-    //Takes selected date and returns working days from date to end of month. Inclusive
-    getWorkingDaysUntilEndOfMonth() {
-      const date = new Date(
-        this.dateObject1.date.getFullYear(),
-        this.dateObject1.date.getMonth() + 1,
-        0
-      );
-      let daysInMonth = date.getDate();
-      let startDate = new Date(this.dateObject1.date);
-      let endDate = new Date(
-        this.dateObject1.date.getFullYear(),
-        this.dateObject1.date.getMonth(),
-        daysInMonth
-      );
-
-      let workingDays = 0;
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        if (d.getDay() != 0 && d.getDay() != 6 && !this.isDateHoliday(d)) {
-          workingDays++;
-        }
-      }
-      return workingDays;
-    },
-    getWorkingHoursUntilEndOfMonth() {
-      return this.getWorkingDaysUntilEndOfMonth() * 8;
-    },
-    getHolidaysUntilEndOfMonth() {
-      const date = new Date(
-        this.dateObject1.date.getFullYear(),
-        this.dateObject1.date.getMonth() + 1,
-        0
-      );
-      let daysInMonth = date.getDate();
-      let startDate = new Date(this.dateObject1.date);
-      let endDate = new Date(
-        this.dateObject1.date.getFullYear(),
-        this.dateObject1.date.getMonth(),
-        daysInMonth
-      );
-
-      let holidays = 0;
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        if (d.getDay() != 0 && d.getDay() != 6 && this.isDateHoliday(d)) {
-          holidays++;
-        }
-      }
-      return holidays;
-    },
-    getHolidayHoursUntilEndfOfMonth() {
-      return this.getHolidaysUntilEndOfMonth() * 8;
-    },
-    getWorkingHoursInMonth() {
-      return this.getWorkingDaysInMonth() * 8;
-    },
-    getWorkingDaysInRange() {
-      let startDate = new Date(this.dateObject1.date);
-      let endDate = new Date(this.dateObject2.date);
-
-      let workingDays = 0;
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        if (d.getDay() != 0 && d.getDay() != 6 && !this.isDateHoliday(d)) {
-          workingDays++;
-        }
-      }
-      return workingDays;
-    },
-    getWorkingHoursInRange() {
-      return this.getWorkingDaysInRange() * 8;
-    },
-    getHolidaysInRange() {
-      let startDate = new Date(this.dateObject1.date);
-      let endDate = new Date(this.dateObject2.date);
-
-      let holidays = 0;
-      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-        if (d.getDay() != 0 && d.getDay() != 6 && this.isDateHoliday(d)) {
-          holidays++;
-        }
-      }
-      return holidays;
-    },
-    getHolidayHoursInRange() {
-      return this.getHolidaysInRange() * 8;
-    },
-    getDaysInMonth() {
-      let dateSelected;
-      if (this.viewingDate) {
-        dateSelected = this.viewingDate;
-      } else {
-        dateSelected = new Date();
-      }
-      //Using month + 1 with day as 0 looks ar previous months last day, so this is valid equation
-      const date = new Date(
-        dateSelected.getFullYear(),
-        dateSelected.getMonth() + 1,
-        0
-      );
-      return date.getDate();
     },
   },
 };

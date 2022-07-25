@@ -211,8 +211,59 @@ function getMonthName(monthNum) {
   return month;
 }
 
-//Function that returns the
-// function getWorkingDaysUntilEndOfMonth(dateObject) {}
+//Returns valid working days within given date range
+function getWorkingDaysInRange(localCal, dateObject1, dateObject2) {
+  let startDate = new Date(dateObject1.date);
+  let endDate = new Date(dateObject2.date);
+
+  let workingDays = 0;
+  for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+    if (d.getDay() != 0 && d.getDay() != 6) {
+      workingDays++;
+    }
+  }
+  return workingDays;
+}
+
+//Returns working hours for given range
+function getWorkingHoursInRange(
+  localCal,
+  dateObject1,
+  dateObject2,
+  workingHoursPerDay
+) {
+  return (
+    getWorkingDaysInRange(localCal, dateObject1, dateObject2) *
+    workingHoursPerDay
+  );
+}
+
+//Function to get holidays in range that fall on working days
+function getNumOfHolidaysInRange(localCal, dateObject1, dateObject2) {
+  let startDate = new Date(dateObject1.date);
+  let endDate = new Date(dateObject2.date);
+
+  let numOfHolidays = 0;
+  for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+    if (d.getDay() != 0 && d.getDay() != 6 && isDateHoliday(localCal, d)) {
+      numOfHolidays++;
+    }
+  }
+  return numOfHolidays;
+}
+
+//Returns hours for holidays in range
+function getNumOfHolidayHoursInRange(
+  localCal,
+  dateObject1,
+  dateObject2,
+  workingHoursPerDay
+) {
+  return (
+    getNumOfHolidaysInRange(localCal, dateObject1, dateObject2) *
+    workingHoursPerDay
+  );
+}
 
 exports.getTotalDaysInMonth = getTotalDaysInMonth;
 exports.getWorkingDaysInMonth = getWorkingDaysInMonth;
@@ -228,3 +279,7 @@ exports.getWorkingDaysInRestOfMonth = getWorkingDaysInRestOfMonth;
 exports.getWorkingHoursInRestOfMonth = getWorkingHoursInRestOfMonth;
 exports.getNumOfHolidaysInRestOfMonth = getNumOfHolidaysInRestOfMonth;
 exports.getHolidayHoursOfRestOfMonth = getHolidayHoursOfRestOfMonth;
+exports.getWorkingDaysInRange = getWorkingDaysInRange;
+exports.getWorkingHoursInRange = getWorkingHoursInRange;
+exports.getNumOfHolidaysInRange = getNumOfHolidaysInRange;
+exports.getNumOfHolidayHoursInRange = getNumOfHolidayHoursInRange;

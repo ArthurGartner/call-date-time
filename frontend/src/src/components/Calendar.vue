@@ -339,7 +339,9 @@ export default {
       }
 
       //Create temp date object to send to hour summary to indicate current month view
-      let newDate = new Date(this.selectedYear, this.selectedMonth, 1);
+      let newDate = {
+        date: new Date(this.selectedYear, this.selectedMonth, 1),
+      };
       this.$emit("new-month", newDate);
       this.updateDateArray(this.selectedMonth, this.selectedYear);
     },
