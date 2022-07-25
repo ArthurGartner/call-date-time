@@ -1,43 +1,68 @@
 <template>
-  <div
-    @click="$emit('date-clicked')"
-    v-if="this.dateObject"
-    class="date-image d-flex flex-column text-center align-middle"
-  >
-    <div class="date-val d-flex flex-column">
+  <div class="date-container">
+    <div
+      @click="$emit('date-clicked')"
+      @mouseup.right="showDayEditToggle"
+      @contextmenu.prevent
+      v-if="this.dateObject"
+      class="date-image d-flex flex-column text-center align-middle"
+    >
+      <div class="date-val d-flex flex-column">
+        <div
+          :class="[
+            'inline-block',
+            'my-auto',
+            this.dateObject?.isCurDay
+              ? 'current-date-text'
+              : 'not-current-date-text',
+          ]"
+        >
+          {{ this.dateObject?.date.getDate() }}
+        </div>
+      </div>
       <div
         :class="[
-          'inline-block',
-          'my-auto',
-          this.dateObject?.isCurDay
-            ? 'current-date-text'
-            : 'not-current-date-text',
+          'date-background',
+          this.dateObject.isCurDay ? 'current-date' : 'not-current-date',
         ]"
-      >
-        {{ this.dateObject?.date.getDate() }}
-      </div>
+      ></div>
     </div>
-    <div
-      :class="[
-        'date-background',
-        this.dateObject.isCurDay ? 'current-date' : 'not-current-date',
-      ]"
-    ></div>
+    <DayEdit :dateObject="dateObject" class="day-edit-menu" />
   </div>
 </template>
 <script>
+import DayEdit from "./DayEdit.vue";
 export default {
   name: "date-selection-date-icon",
   props: {
     dateObject: Object,
   },
+  components: {
+    DayEdit,
+  },
+  methods: {
+    showDayEditToggle() {
+      console.log("right-click");
+    },
+  },
 };
 </script>
 <style scoped lang="scss">
+.day-edit-menu {
+  top: 10px;
+  left: 80px;
+}
+
+.date-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .date-image {
   width: 80px;
   font-size: 2.7rem;
   position: relative;
+  margin: auto;
   cursor: pointer;
 
   .date-val {

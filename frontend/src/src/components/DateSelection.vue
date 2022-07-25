@@ -102,7 +102,6 @@ export default {
     width: 100%;
     background: var(--item-background);
     border-radius: 20px;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
 
@@ -116,6 +115,7 @@ export default {
       padding-left: 20px;
       padding-right: 20px;
       font-weight: 600;
+      border-radius: 20px 20px 0 0;
     }
 
     .content {
