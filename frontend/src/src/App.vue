@@ -94,6 +94,8 @@ html {
   --cal-holiday: #007aff;
   --primary-blue: #007aff;
   --primary-purple: #af52de;
+  --primary-red: #ff3b30;
+  --primary-orange: #ff9500;
 }
 
 /* Define styles for the root window with dark - mode preference */
@@ -115,6 +117,8 @@ html {
   --primary-blue: #0a84ff;
   --primary-purple: #bf5af2;
   --primary-teal: #40c8e0;
+  --primary-orange: #ff9f0a;
+  --primary-red: #ff453a;
 }
 
 .screen-area {

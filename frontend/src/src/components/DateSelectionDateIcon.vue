@@ -27,7 +27,12 @@
         ]"
       ></div>
     </div>
-    <DayEdit :dateObject="dateObject" class="day-edit-menu" />
+    <DayEdit
+      :dateObject="dateObject"
+      class="day-edit-menu"
+      @close-menu="showDayEditToggle"
+      :open="openEditMenu"
+    />
   </div>
 </template>
 <script>
@@ -40,14 +45,43 @@ export default {
   components: {
     DayEdit,
   },
+  mounted() {
+    let self = this;
+    window.onload = function () {
+      var MenuToggle = document.getElementsByClassName("date-container")[0];
+      MenuToggle.style["-webkit-user-select"] = "none";
+      MenuToggle.addEventListener("touchstart", Vanish);
+      MenuToggle.addEventListener("touchend", VanishClear);
+      var timer;
+      function Vanish() {
+        timer = setTimeout(function () {
+          self.openEditMenu = true;
+        }, 500);
+      }
+      function VanishClear() {
+        clearTimeout(timer);
+      }
+    };
+  },
+  data() {
+    return {
+      openEditMenu: false,
+    };
+  },
   methods: {
     showDayEditToggle() {
-      console.log("right-click");
+      this.openEditMenu = !this.openEditMenu;
+    },
+    closeMenu() {
+      this.openEditMenu = false;
     },
   },
 };
 </script>
 <style scoped lang="scss">
+.hide {
+  display: none;
+}
 .day-edit-menu {
   top: 10px;
   left: 80px;
@@ -70,6 +104,8 @@ export default {
     height: 100%;
     flex-grow: 1;
     color: var(--text-primary-color-inverse);
+    // user-select: none;
+    // -moz-user-select: none;
   }
 
   .date-background {

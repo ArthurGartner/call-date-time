@@ -47,6 +47,9 @@
             :class="[
               'individual-day',
               dateObject.isCurDay ? 'current-day' : 'not-current-day',
+              dateObject.date.getDay() == 0 || dateObject.date.getDay() == 6
+                ? 'weekend'
+                : '',
             ]"
             v-for="dateObject in curMonthDateObjects"
             :key="dateObject.date.getDate()"
@@ -369,6 +372,9 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.weekend {
+  color: var(--primary-orange);
+}
 .test {
   background: rgba(128, 128, 128, 0.25);
 }
